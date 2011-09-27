@@ -1,0 +1,112 @@
+# ./lsof.static -p 526 2>/dev/null
+COMMAND   PID     USER   FD   TYPE     DEVICE    SIZE NODE NAME
+cts.Monke 526    10032  cwd    DIR        0,1       0    1 /
+cts.Monke 526    10032  rtd    DIR        0,1       0    1 /
+cts.Monke 526    10032  txt    REG       31,0    5676  305 /system/bin/app_process
+cts.Monke 526    10032  mem    REG        0,0            0 [heap] (stat: No such file or directory)
+cts.Monke 526    10032  DEL    REG        0,7          188 /dev/ashmem/system_properties
+cts.Monke 526    10032  DEL    REG        0,7          338 /dev/ashmem/mspace/dalvik-heap/zygote/0
+cts.Monke 526    10032  mem    REG       31,0  190044  444 /system/fonts/DroidSans.ttf
+cts.Monke 526    10032  mem    REG        0,7          460 /dev/ashmem/SurfaceFlinger (stat: Not a directory)
+cts.Monke 526    10032  DEL    REG        0,7          340 /dev/ashmem/dalvik-LinearAlloc
+cts.Monke 526    10032  mem    REG       31,0 2155252  459 /system/framework/core.jar
+cts.Monke 526    10032  mem    REG       31,1 5010240  277 /data/dalvik-cache/system@framework@core.jar@classes.dex
+cts.Monke 526    10032  mem    REG       31,0  234769  460 /system/framework/ext.jar
+cts.Monke 526    10032  mem    REG       31,1  572480  278 /data/dalvik-cache/system@framework@ext.jar@classes.dex
+cts.Monke 526    10032  mem    REG       31,0 2711918  463 /system/framework/framework.jar
+cts.Monke 526    10032  mem    REG       31,1 6469808  279 /data/dalvik-cache/system@framework@framework.jar@classes.dex
+cts.Monke 526    10032  mem    REG       31,0   85736  456 /system/framework/android.policy.jar
+cts.Monke 526    10032  mem    REG       31,1  184496  280 /data/dalvik-cache/system@framework@android.policy.jar@classes.dex
+cts.Monke 526    10032  mem    REG       31,0  623448  469 /system/framework/services.jar
+cts.Monke 526    10032  mem    REG       31,1 1361864  281 /data/dalvik-cache/system@framework@services.jar@classes.dex
+cts.Monke 526    10032  DEL    REG        0,7         2511 /dev/ashmem/dalvik-heap-bitmap/objects
+cts.Monke 526    10032  mem    REG       31,1  570420  284 /data/app/com.dseffects.MonkeyJump2-1.apk
+cts.Monke 526    10032  DEL    REG        0,7         1329 /dev/ashmem/dalvik-heap-bitmap/mark/0
+cts.Monke 526    10032  DEL    REG        0,7         1330 /dev/ashmem/dalvik-heap-bitmap/mark/1
+cts.Monke 526    10032  mem    REG       31,0 4780313  461 /system/framework/framework-res.apk
+cts.Monke 526    10032  DEL    REG        0,7          447 /dev/ashmem/mspace/dalvik-heap/zygote/1
+cts.Monke 526    10032  DEL    REG        0,7         2510 /dev/ashmem/mspace/dalvik-heap/2
+cts.Monke 526    10032  mem    CHR      10,59           53 /dev/binder
+cts.Monke 526    10032  mem    REG       31,1  178992  562 /data/dalvik-cache/data@app@com.dseffects.MonkeyJump2-1.apk@classes.dex
+cts.Monke 526    10032  mem    REG       31,0 5222996  509 /system/lib/libicudata.so
+cts.Monke 526    10032  mem    REG       31,0  561152  503 /system/lib/libdvm.so
+cts.Monke 526    10032  mem    REG       31,0  243764  559 /system/lib/libstlport.so
+cts.Monke 526    10032  mem    REG       31,0  223744  515 /system/lib/libjpeg.so
+cts.Monke 526    10032  mem    REG       31,0   34092  501 /system/lib/libdrm1.so
+cts.Monke 526    10032  mem    REG       31,0  705292  553 /system/lib/libstagefright.so
+cts.Monke 526    10032  mem    REG       31,0   13564  556 /system/lib/libstagefright_color_conversion.so
+cts.Monke 526    10032  mem    REG       31,0   21604  555 /system/lib/libstagefright_avc_common.so
+cts.Monke 526    10032  mem    REG       31,0   51456  554 /system/lib/libstagefright_amrnb_common.so
+cts.Monke 526    10032  mem    REG       31,0  838676  532 /system/lib/libopencore_common.so
+cts.Monke 526    10032  mem    REG       31,0  775688  538 /system/lib/libopencore_player.so
+cts.Monke 526    10032  mem    REG       31,0   97544  526 /system/lib/libomx_amrenc_sharedlibrary.so
+cts.Monke 526    10032  mem    REG       31,0  204340  537 /system/lib/libopencore_net_support.so
+cts.Monke 526    10032  mem    REG       31,0   85336  530 /system/lib/libomx_sharedlibrary.so
+cts.Monke 526    10032  mem    REG       31,0    9652  504 /system/lib/libemoji.so
+cts.Monke 526    10032  mem    REG       31,0   22068  508 /system/lib/libhardware_legacy.so
+cts.Monke 526    10032  mem    REG       31,0    5264  507 /system/lib/libhardware.so
+cts.Monke 526    10032  mem    REG       31,0  151660  569 /system/lib/libutils.so
+cts.Monke 526    10032  mem    REG       31,0  149428  490 /system/lib/libbinder.so
+cts.Monke 526    10032  mem    REG       31,0 4485096  572 /system/lib/libwebcore.so
+cts.Monke 526    10032  mem    REG       31,0   88604  506 /system/lib/libexpat.so
+cts.Monke 526    10032  mem    REG       31,0  321836  550 /system/lib/libsqlite.so
+cts.Monke 526    10032  mem    REG       31,0  380708  519 /system/lib/libmedia.so
+cts.Monke 526    10032  mem    REG       31,0   53304  520 /system/lib/libmedia_jni.so
+cts.Monke 526    10032  mem    REG       31,0  116976  570 /system/lib/libvorbisidec.so
+cts.Monke 526    10032  mem    REG       31,0  338392  548 /system/lib/libsonivox.so
+cts.Monke 526    10032  mem    REG       31,0   43140  547 /system/lib/libskiagl.so
+cts.Monke 526    10032  mem    REG       31,0 1134348  546 /system/lib/libskia.so
+cts.Monke 526    10032  mem    REG       31,0   80268  568 /system/lib/libui.so
+cts.Monke 526    10032  mem    REG       31,0   77744  494 /system/lib/libcamera_client.so
+cts.Monke 526    10032  mem    REG       31,0   40784  505 /system/lib/libexif.so
+cts.Monke 526    10032  mem    REG       31,0    9240  479 /system/lib/libETC1.so
+cts.Monke 526    10032  mem    REG       31,0   36100  478 /system/lib/libEGL.so
+cts.Monke 526    10032  mem    REG       31,0   17328  482 /system/lib/libGLESv2.so
+cts.Monke 526    10032  mem    REG       31,0   21424  481 /system/lib/libGLESv1_CM.so
+cts.Monke 526    10032  mem    REG       31,0   97140  561 /system/lib/libsurfaceflinger_client.so
+cts.Monke 526    10032  mem    REG       31,0  107772  542 /system/lib/libpixelflinger.so
+cts.Monke 526    10032  mem    REG       31,0  202976  522 /system/lib/libnativehelper.so
+cts.Monke 526    10032  mem    REG       31,0  477676  487 /system/lib/libandroid_runtime.so
+cts.Monke 526    10032  mem    REG       31,0  934472  510 /system/lib/libicui18n.so
+cts.Monke 526    10032  mem    REG       31,0  885004  511 /system/lib/libicuuc.so
+cts.Monke 526    10032  mem    REG       31,0   17596  523 /system/lib/libnetutils.so
+cts.Monke 526    10032  mem    REG       31,0    9488  574 /system/lib/libwpa_client.so
+cts.Monke 526    10032  mem    REG       31,0  649880  496 /system/lib/libcrypto.so
+cts.Monke 526    10032  mem    REG       31,0  159092  552 /system/lib/libssl.so
+cts.Monke 526    10032  mem    REG       31,0   79228  576 /system/lib/libz.so
+cts.Monke 526    10032  mem    REG       31,0   59368  498 /system/lib/libcutils.so
+cts.Monke 526    10032  mem    REG       31,0   13520  516 /system/lib/liblog.so
+cts.Monke 526    10032  mem    REG       31,0  132116  518 /system/lib/libm.so
+cts.Monke 526    10032  mem    REG       31,0    5268  558 /system/lib/libstdc++.so
+cts.Monke 526    10032  mem    REG       31,0  270068  491 /system/lib/libc.so
+cts.Monke 526    10032  mem    REG       31,0   51628  348 /system/bin/linker
+cts.Monke 526    10032    0u   CHR        1,3           42 /dev/null
+cts.Monke 526    10032    1u   CHR        1,3           42 /dev/null
+cts.Monke 526    10032    2u   CHR        1,3           42 /dev/null
+cts.Monke 526    10032    3w   CHR      10,58           55 /dev/log/main
+cts.Monke 526    10032    4w   CHR      10,56           57 /dev/log/radio
+cts.Monke 526    10032    5w   CHR      10,57           56 /dev/log/events
+cts.Monke 526    10032    6r   REG       31,0 2155252  459 /system/framework/core.jar
+cts.Monke 526    10032    7r   REG       31,0  234769  460 /system/framework/ext.jar
+cts.Monke 526    10032    8r   REG       31,0 2711918  463 /system/framework/framework.jar
+cts.Monke 526    10032    9u   CHR      10,62           49 /dev/ashmem
+cts.Monke 526    10032   10u  unix 0xc9f610c0         2515 socket
+cts.Monke 526    10032   11r   REG       31,0   85736  456 /system/framework/android.policy.jar
+cts.Monke 526    10032   12r   REG       31,0  623448  469 /system/framework/services.jar
+cts.Monke 526    10032   13r   REG       31,0 2711918  463 /system/framework/framework.jar
+cts.Monke 526    10032   14r   REG       31,0  190044  444 /system/fonts/DroidSans.ttf
+cts.Monke 526    10032   15r   REG       31,0 2155252  459 /system/framework/core.jar
+cts.Monke 526    10032   16r   CHR        1,9           46 /dev/urandom
+cts.Monke 526    10032   17r   REG       31,0 4780313  461 /system/framework/framework-res.apk
+cts.Monke 526    10032   18r  FIFO        0,5         2516 pipe
+cts.Monke 526    10032   19w  FIFO        0,5         2516 pipe
+cts.Monke 526    10032   20u  unix 0xc9fdb260         2519 socket
+cts.Monke 526    10032   21u   CHR      10,59           53 /dev/binder
+cts.Monke 526    10032   22w   REG       0,13       0  221 /dev/cpuctl/tasks
+cts.Monke 526    10032   23w   REG       0,13       0  234 /dev/cpuctl/bg_non_interactive/tasks
+cts.Monke 526    10032   24u   CHR      10,62           49 /dev/ashmem
+cts.Monke 526    10032   25u   CHR      10,62           49 /dev/ashmem
+cts.Monke 526    10032   26r   REG       31,1  570420  284 /data/app/com.dseffects.MonkeyJump2-1.apk
+cts.Monke 526    10032   27r   REG       31,1  570420  284 /data/app/com.dseffects.MonkeyJump2-1.apk
+cts.Monke 526    10032   28r   REG       31,1  570420  284 /data/app/com.dseffects.MonkeyJump2-1.apk
+cts.Monke 526    10032   29u  IPv4       2534          TCP *:5432 (LISTEN)
