@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+payloads.py
+
+Created by Jaime Blasco on 2011-10-04.
+Copyright (c) 2011 Alienvault Labs. All rights reserved.
+"""
+
 import libemu
 import commands
 import os
