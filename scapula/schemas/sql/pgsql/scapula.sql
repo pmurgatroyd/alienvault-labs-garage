@@ -40,16 +40,40 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE "Events" (
+    "ID" bigint NOT NULL
 );
 
 
 ALTER TABLE public."Events" OWNER TO conrad;
 
 --
+-- Name: GeolocationRegions; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "GeolocationRegions" (
+    "ID" bigint NOT NULL
+);
+
+
+ALTER TABLE public."GeolocationRegions" OWNER TO conrad;
+
+--
+-- Name: Geolocations; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "Geolocations" (
+    "ID" bigint NOT NULL
+);
+
+
+ALTER TABLE public."Geolocations" OWNER TO conrad;
+
+--
 -- Name: HostConfigs; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
 CREATE TABLE "HostConfigs" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -60,6 +84,7 @@ ALTER TABLE public."HostConfigs" OWNER TO conrad;
 --
 
 CREATE TABLE "Hosts" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -70,6 +95,7 @@ ALTER TABLE public."Hosts" OWNER TO conrad;
 --
 
 CREATE TABLE "Incidents" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -80,6 +106,7 @@ ALTER TABLE public."Incidents" OWNER TO conrad;
 --
 
 CREATE TABLE "IntelligenceEntities" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -90,16 +117,39 @@ ALTER TABLE public."IntelligenceEntities" OWNER TO conrad;
 --
 
 CREATE TABLE "IntelligenceSources" (
+    "ID" bigint NOT NULL
 );
 
 
 ALTER TABLE public."IntelligenceSources" OWNER TO conrad;
 
 --
+-- Name: IntelligenceTypes; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "IntelligenceTypes" (
+);
+
+
+ALTER TABLE public."IntelligenceTypes" OWNER TO conrad;
+
+--
+-- Name: Investigations; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "Investigations" (
+    "ID" bigint NOT NULL
+);
+
+
+ALTER TABLE public."Investigations" OWNER TO conrad;
+
+--
 -- Name: KnowledgeBase; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
 CREATE TABLE "KnowledgeBase" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -110,6 +160,7 @@ ALTER TABLE public."KnowledgeBase" OWNER TO conrad;
 --
 
 CREATE TABLE "Networks" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -120,6 +171,7 @@ ALTER TABLE public."Networks" OWNER TO conrad;
 --
 
 CREATE TABLE "Notes" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -130,6 +182,7 @@ ALTER TABLE public."Notes" OWNER TO conrad;
 --
 
 CREATE TABLE "OrgUnits" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -140,6 +193,7 @@ ALTER TABLE public."OrgUnits" OWNER TO conrad;
 --
 
 CREATE TABLE "Organizations" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -150,6 +204,7 @@ ALTER TABLE public."Organizations" OWNER TO conrad;
 --
 
 CREATE TABLE "Platforms" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -160,6 +215,7 @@ ALTER TABLE public."Platforms" OWNER TO conrad;
 --
 
 CREATE TABLE "Procedures" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -170,6 +226,7 @@ ALTER TABLE public."Procedures" OWNER TO conrad;
 --
 
 CREATE TABLE "Proceedings" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -180,6 +237,7 @@ ALTER TABLE public."Proceedings" OWNER TO conrad;
 --
 
 CREATE TABLE "Processes" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -190,6 +248,7 @@ ALTER TABLE public."Processes" OWNER TO conrad;
 --
 
 CREATE TABLE "Users" (
+    "ID" bigint NOT NULL
 );
 
 
@@ -200,26 +259,33 @@ ALTER TABLE public."Users" OWNER TO conrad;
 --
 
 CREATE TABLE "Vulnerabilities" (
+    "ID" bigint NOT NULL
 );
 
 
 ALTER TABLE public."Vulnerabilities" OWNER TO conrad;
 
 --
--- Name: investigations; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
---
-
-CREATE TABLE investigations (
-);
-
-
-ALTER TABLE public.investigations OWNER TO conrad;
-
---
 -- Data for Name: Events; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Events"  FROM stdin;
+COPY "Events" ("ID") FROM stdin;
+\.
+
+
+--
+-- Data for Name: GeolocationRegions; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "GeolocationRegions" ("ID") FROM stdin;
+\.
+
+
+--
+-- Data for Name: Geolocations; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "Geolocations" ("ID") FROM stdin;
 \.
 
 
@@ -227,7 +293,7 @@ COPY "Events"  FROM stdin;
 -- Data for Name: HostConfigs; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "HostConfigs"  FROM stdin;
+COPY "HostConfigs" ("ID") FROM stdin;
 \.
 
 
@@ -235,7 +301,7 @@ COPY "HostConfigs"  FROM stdin;
 -- Data for Name: Hosts; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Hosts"  FROM stdin;
+COPY "Hosts" ("ID") FROM stdin;
 \.
 
 
@@ -243,7 +309,7 @@ COPY "Hosts"  FROM stdin;
 -- Data for Name: Incidents; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Incidents"  FROM stdin;
+COPY "Incidents" ("ID") FROM stdin;
 \.
 
 
@@ -251,7 +317,7 @@ COPY "Incidents"  FROM stdin;
 -- Data for Name: IntelligenceEntities; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "IntelligenceEntities"  FROM stdin;
+COPY "IntelligenceEntities" ("ID") FROM stdin;
 \.
 
 
@@ -259,7 +325,23 @@ COPY "IntelligenceEntities"  FROM stdin;
 -- Data for Name: IntelligenceSources; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "IntelligenceSources"  FROM stdin;
+COPY "IntelligenceSources" ("ID") FROM stdin;
+\.
+
+
+--
+-- Data for Name: IntelligenceTypes; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "IntelligenceTypes"  FROM stdin;
+\.
+
+
+--
+-- Data for Name: Investigations; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "Investigations" ("ID") FROM stdin;
 \.
 
 
@@ -267,7 +349,7 @@ COPY "IntelligenceSources"  FROM stdin;
 -- Data for Name: KnowledgeBase; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "KnowledgeBase"  FROM stdin;
+COPY "KnowledgeBase" ("ID") FROM stdin;
 \.
 
 
@@ -275,7 +357,7 @@ COPY "KnowledgeBase"  FROM stdin;
 -- Data for Name: Networks; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Networks"  FROM stdin;
+COPY "Networks" ("ID") FROM stdin;
 \.
 
 
@@ -283,7 +365,7 @@ COPY "Networks"  FROM stdin;
 -- Data for Name: Notes; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Notes"  FROM stdin;
+COPY "Notes" ("ID") FROM stdin;
 \.
 
 
@@ -291,7 +373,7 @@ COPY "Notes"  FROM stdin;
 -- Data for Name: OrgUnits; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "OrgUnits"  FROM stdin;
+COPY "OrgUnits" ("ID") FROM stdin;
 \.
 
 
@@ -299,7 +381,7 @@ COPY "OrgUnits"  FROM stdin;
 -- Data for Name: Organizations; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Organizations"  FROM stdin;
+COPY "Organizations" ("ID") FROM stdin;
 \.
 
 
@@ -307,7 +389,7 @@ COPY "Organizations"  FROM stdin;
 -- Data for Name: Platforms; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Platforms"  FROM stdin;
+COPY "Platforms" ("ID") FROM stdin;
 \.
 
 
@@ -315,7 +397,7 @@ COPY "Platforms"  FROM stdin;
 -- Data for Name: Procedures; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Procedures"  FROM stdin;
+COPY "Procedures" ("ID") FROM stdin;
 \.
 
 
@@ -323,7 +405,7 @@ COPY "Procedures"  FROM stdin;
 -- Data for Name: Proceedings; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Proceedings"  FROM stdin;
+COPY "Proceedings" ("ID") FROM stdin;
 \.
 
 
@@ -331,7 +413,7 @@ COPY "Proceedings"  FROM stdin;
 -- Data for Name: Processes; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Processes"  FROM stdin;
+COPY "Processes" ("ID") FROM stdin;
 \.
 
 
@@ -339,7 +421,7 @@ COPY "Processes"  FROM stdin;
 -- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Users"  FROM stdin;
+COPY "Users" ("ID") FROM stdin;
 \.
 
 
@@ -347,16 +429,168 @@ COPY "Users"  FROM stdin;
 -- Data for Name: Vulnerabilities; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Vulnerabilities"  FROM stdin;
+COPY "Vulnerabilities" ("ID") FROM stdin;
 \.
 
 
 --
--- Data for Name: investigations; Type: TABLE DATA; Schema: public; Owner: conrad
+-- Name: Events_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
 --
 
-COPY investigations  FROM stdin;
-\.
+ALTER TABLE ONLY "Events"
+    ADD CONSTRAINT "Events_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: GeolocationRegions_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "GeolocationRegions"
+    ADD CONSTRAINT "GeolocationRegions_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Geolocations_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Geolocations"
+    ADD CONSTRAINT "Geolocations_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: HostConfigs_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "HostConfigs"
+    ADD CONSTRAINT "HostConfigs_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Hosts_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Hosts"
+    ADD CONSTRAINT "Hosts_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Incidents_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Incidents"
+    ADD CONSTRAINT "Incidents_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: IntelligenceEntities_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "IntelligenceEntities"
+    ADD CONSTRAINT "IntelligenceEntities_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: IntelligenceSource_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "IntelligenceSources"
+    ADD CONSTRAINT "IntelligenceSource_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Investigations_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Investigations"
+    ADD CONSTRAINT "Investigations_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: KnowledgeBase_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "KnowledgeBase"
+    ADD CONSTRAINT "KnowledgeBase_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Networks_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Networks"
+    ADD CONSTRAINT "Networks_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Notes_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Notes"
+    ADD CONSTRAINT "Notes_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Organizations"
+    ADD CONSTRAINT "Organizations_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Platforms_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Platforms"
+    ADD CONSTRAINT "Platforms_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Procedures_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Procedures"
+    ADD CONSTRAINT "Procedures_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Proceedings_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Proceedings"
+    ADD CONSTRAINT "Proceedings_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Processes_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Processes"
+    ADD CONSTRAINT "Processes_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Users_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Users"
+    ADD CONSTRAINT "Users_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: Vulnerabilities_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "Vulnerabilities"
+    ADD CONSTRAINT "Vulnerabilities_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: orgUnits_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "OrgUnits"
+    ADD CONSTRAINT "orgUnits_pkey" PRIMARY KEY ("ID");
 
 
 --
