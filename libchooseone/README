@@ -1,3 +1,8 @@
 A library for consuming, storing and exporting SCAP-related data.
 
 "The great thing about standards, is that there are so many to choose from"
+
+An experimental standard-translation library (and associated database) for consuming, storing and referencing
+security data according to various public standards.
+
+
