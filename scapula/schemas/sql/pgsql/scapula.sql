@@ -36,11 +36,55 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: AuthDomains; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "AuthDomains" (
+);
+
+
+ALTER TABLE public."AuthDomains" OWNER TO conrad;
+
+--
+-- Name: Domains; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "Domains" (
+    "ID" bigint NOT NULL,
+    name character varying(255),
+    organization_id bigint
+);
+
+
+ALTER TABLE public."Domains" OWNER TO conrad;
+
+--
+-- Name: EventSources; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "EventSources" (
+);
+
+
+ALTER TABLE public."EventSources" OWNER TO conrad;
+
+--
+-- Name: EventTypes; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "EventTypes" (
+);
+
+
+ALTER TABLE public."EventTypes" OWNER TO conrad;
+
+--
 -- Name: Events; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
 CREATE TABLE "Events" (
-    "ID" bigint NOT NULL
+    "ID" bigint NOT NULL,
+    "Timestamp" date
 );
 
 
@@ -84,7 +128,13 @@ ALTER TABLE public."HostConfigs" OWNER TO conrad;
 --
 
 CREATE TABLE "Hosts" (
-    "ID" bigint NOT NULL
+    "ID" bigint NOT NULL,
+    hostname character varying,
+    dnsname character varying(63),
+    address inet,
+    mac macaddr,
+    domain_id bigint,
+    authdomain_id bigint
 );
 
 
@@ -95,7 +145,10 @@ ALTER TABLE public."Hosts" OWNER TO conrad;
 --
 
 CREATE TABLE "Incidents" (
-    "ID" bigint NOT NULL
+    "ID" bigint NOT NULL,
+    creationtime date,
+    title character varying,
+    impact_id bigint
 );
 
 
@@ -106,7 +159,9 @@ ALTER TABLE public."Incidents" OWNER TO conrad;
 --
 
 CREATE TABLE "IntelligenceEntities" (
-    "ID" bigint NOT NULL
+    "ID" bigint NOT NULL,
+    source_id bigint,
+    type_id bigint
 );
 
 
@@ -117,7 +172,10 @@ ALTER TABLE public."IntelligenceEntities" OWNER TO conrad;
 --
 
 CREATE TABLE "IntelligenceSources" (
-    "ID" bigint NOT NULL
+    "ID" bigint NOT NULL,
+    name character varying,
+    location character varying,
+    lastupdated date
 );
 
 
@@ -128,6 +186,8 @@ ALTER TABLE public."IntelligenceSources" OWNER TO conrad;
 --
 
 CREATE TABLE "IntelligenceTypes" (
+    "ID" bigint NOT NULL,
+    typename character varying NOT NULL
 );
 
 
@@ -160,7 +220,13 @@ ALTER TABLE public."KnowledgeBase" OWNER TO conrad;
 --
 
 CREATE TABLE "Networks" (
-    "ID" bigint NOT NULL
+    "ID" bigint NOT NULL,
+    address inet NOT NULL,
+    mask smallint NOT NULL,
+    subnet cidr NOT NULL,
+    zone character varying,
+    description character varying,
+    geolocation_id bigint
 );
 
 
@@ -266,10 +332,42 @@ CREATE TABLE "Vulnerabilities" (
 ALTER TABLE public."Vulnerabilities" OWNER TO conrad;
 
 --
+-- Data for Name: AuthDomains; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "AuthDomains"  FROM stdin;
+\.
+
+
+--
+-- Data for Name: Domains; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "Domains" ("ID", name, organization_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: EventSources; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "EventSources"  FROM stdin;
+\.
+
+
+--
+-- Data for Name: EventTypes; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "EventTypes"  FROM stdin;
+\.
+
+
+--
 -- Data for Name: Events; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Events" ("ID") FROM stdin;
+COPY "Events" ("ID", "Timestamp") FROM stdin;
 \.
 
 
@@ -301,7 +399,7 @@ COPY "HostConfigs" ("ID") FROM stdin;
 -- Data for Name: Hosts; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Hosts" ("ID") FROM stdin;
+COPY "Hosts" ("ID", hostname, dnsname, address, mac, domain_id, authdomain_id) FROM stdin;
 \.
 
 
@@ -309,7 +407,7 @@ COPY "Hosts" ("ID") FROM stdin;
 -- Data for Name: Incidents; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Incidents" ("ID") FROM stdin;
+COPY "Incidents" ("ID", creationtime, title, impact_id) FROM stdin;
 \.
 
 
@@ -317,7 +415,7 @@ COPY "Incidents" ("ID") FROM stdin;
 -- Data for Name: IntelligenceEntities; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "IntelligenceEntities" ("ID") FROM stdin;
+COPY "IntelligenceEntities" ("ID", source_id, type_id) FROM stdin;
 \.
 
 
@@ -325,7 +423,7 @@ COPY "IntelligenceEntities" ("ID") FROM stdin;
 -- Data for Name: IntelligenceSources; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "IntelligenceSources" ("ID") FROM stdin;
+COPY "IntelligenceSources" ("ID", name, location, lastupdated) FROM stdin;
 \.
 
 
@@ -333,7 +431,7 @@ COPY "IntelligenceSources" ("ID") FROM stdin;
 -- Data for Name: IntelligenceTypes; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "IntelligenceTypes"  FROM stdin;
+COPY "IntelligenceTypes" ("ID", typename) FROM stdin;
 \.
 
 
@@ -357,7 +455,7 @@ COPY "KnowledgeBase" ("ID") FROM stdin;
 -- Data for Name: Networks; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Networks" ("ID") FROM stdin;
+COPY "Networks" ("ID", address, mask, subnet, zone, description, geolocation_id) FROM stdin;
 \.
 
 
