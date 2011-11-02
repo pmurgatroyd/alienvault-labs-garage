@@ -36,6 +36,18 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: Analysts; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "Analysts" (
+    "ID" bigint NOT NULL,
+    name character varying
+);
+
+
+ALTER TABLE public."Analysts" OWNER TO conrad;
+
+--
 -- Name: AuthDomains; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
@@ -63,10 +75,23 @@ ALTER TABLE public."Domains" OWNER TO conrad;
 --
 
 CREATE TABLE "EventSources" (
+    "ID" bigint NOT NULL,
+    hostname character varying,
+    address inet,
+    type bigint,
+    network_id bigint,
+    description character varying
 );
 
 
 ALTER TABLE public."EventSources" OWNER TO conrad;
+
+--
+-- Name: COLUMN "EventSources".network_id; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "EventSources".network_id IS 'link to the networks table to indicate what network segment this event source resides on';
+
 
 --
 -- Name: EventTypes; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
@@ -84,7 +109,11 @@ ALTER TABLE public."EventTypes" OWNER TO conrad;
 
 CREATE TABLE "Events" (
     "ID" bigint NOT NULL,
-    "Timestamp" date
+    "Timestamp" date,
+    incident_id bigint,
+    type_id bigint NOT NULL,
+    source_id bigint,
+    dest_ids bigint[]
 );
 
 
@@ -148,24 +177,46 @@ CREATE TABLE "Incidents" (
     "ID" bigint NOT NULL,
     creationtime date,
     title character varying,
-    impact_id bigint
+    impact_id bigint,
+    owner_id bigint,
+    related_incidents bigint[]
 );
 
 
 ALTER TABLE public."Incidents" OWNER TO conrad;
 
 --
--- Name: IntelligenceEntities; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+-- Name: IntelligenceIndicatorTypes; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
-CREATE TABLE "IntelligenceEntities" (
-    "ID" bigint NOT NULL,
-    source_id bigint,
-    type_id bigint
+CREATE TABLE "IntelligenceIndicatorTypes" (
+    "ID" bigint,
+    name character varying
 );
 
 
-ALTER TABLE public."IntelligenceEntities" OWNER TO conrad;
+ALTER TABLE public."IntelligenceIndicatorTypes" OWNER TO conrad;
+
+--
+-- Name: IntelligenceIndicators; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "IntelligenceIndicators" (
+    "ID" bigint NOT NULL,
+    source_id bigint,
+    type_id bigint,
+    description character varying
+);
+
+
+ALTER TABLE public."IntelligenceIndicators" OWNER TO conrad;
+
+--
+-- Name: COLUMN "IntelligenceIndicators".description; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "IntelligenceIndicators".description IS 'human-readable description of the indicator type';
+
 
 --
 -- Name: IntelligenceSources; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
@@ -198,7 +249,9 @@ ALTER TABLE public."IntelligenceTypes" OWNER TO conrad;
 --
 
 CREATE TABLE "Investigations" (
-    "ID" bigint NOT NULL
+    "ID" bigint NOT NULL,
+    title character varying,
+    owner_id bigint
 );
 
 
@@ -226,11 +279,26 @@ CREATE TABLE "Networks" (
     subnet cidr NOT NULL,
     zone character varying,
     description character varying,
-    geolocation_id bigint
+    geolocation_id bigint,
+    domain_id bigint
 );
 
 
 ALTER TABLE public."Networks" OWNER TO conrad;
+
+--
+-- Name: COLUMN "Networks".geolocation_id; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Networks".geolocation_id IS 'Link to the geolocation for where this subnet is physically located';
+
+
+--
+-- Name: COLUMN "Networks".domain_id; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Networks".domain_id IS 'link to the domain this network reverse maps to';
+
 
 --
 -- Name: Notes; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
@@ -332,6 +400,14 @@ CREATE TABLE "Vulnerabilities" (
 ALTER TABLE public."Vulnerabilities" OWNER TO conrad;
 
 --
+-- Data for Name: Analysts; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "Analysts" ("ID", name) FROM stdin;
+\.
+
+
+--
 -- Data for Name: AuthDomains; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
@@ -351,7 +427,7 @@ COPY "Domains" ("ID", name, organization_id) FROM stdin;
 -- Data for Name: EventSources; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "EventSources"  FROM stdin;
+COPY "EventSources" ("ID", hostname, address, type, network_id, description) FROM stdin;
 \.
 
 
@@ -367,7 +443,7 @@ COPY "EventTypes"  FROM stdin;
 -- Data for Name: Events; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Events" ("ID", "Timestamp") FROM stdin;
+COPY "Events" ("ID", "Timestamp", incident_id, type_id, source_id, dest_ids) FROM stdin;
 \.
 
 
@@ -407,15 +483,23 @@ COPY "Hosts" ("ID", hostname, dnsname, address, mac, domain_id, authdomain_id) F
 -- Data for Name: Incidents; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Incidents" ("ID", creationtime, title, impact_id) FROM stdin;
+COPY "Incidents" ("ID", creationtime, title, impact_id, owner_id, related_incidents) FROM stdin;
 \.
 
 
 --
--- Data for Name: IntelligenceEntities; Type: TABLE DATA; Schema: public; Owner: conrad
+-- Data for Name: IntelligenceIndicatorTypes; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "IntelligenceEntities" ("ID", source_id, type_id) FROM stdin;
+COPY "IntelligenceIndicatorTypes" ("ID", name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: IntelligenceIndicators; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "IntelligenceIndicators" ("ID", source_id, type_id, description) FROM stdin;
 \.
 
 
@@ -439,7 +523,7 @@ COPY "IntelligenceTypes" ("ID", typename) FROM stdin;
 -- Data for Name: Investigations; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Investigations" ("ID") FROM stdin;
+COPY "Investigations" ("ID", title, owner_id) FROM stdin;
 \.
 
 
@@ -455,7 +539,7 @@ COPY "KnowledgeBase" ("ID") FROM stdin;
 -- Data for Name: Networks; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Networks" ("ID", address, mask, subnet, zone, description, geolocation_id) FROM stdin;
+COPY "Networks" ("ID", address, mask, subnet, zone, description, geolocation_id, domain_id) FROM stdin;
 \.
 
 
@@ -583,7 +667,7 @@ ALTER TABLE ONLY "Incidents"
 -- Name: IntelligenceEntities_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
 --
 
-ALTER TABLE ONLY "IntelligenceEntities"
+ALTER TABLE ONLY "IntelligenceIndicators"
     ADD CONSTRAINT "IntelligenceEntities_pkey" PRIMARY KEY ("ID");
 
 
@@ -684,11 +768,34 @@ ALTER TABLE ONLY "Vulnerabilities"
 
 
 --
+-- Name: intelligencetypes_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "IntelligenceTypes"
+    ADD CONSTRAINT intelligencetypes_pkey PRIMARY KEY ("ID");
+
+
+--
 -- Name: orgUnits_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
 --
 
 ALTER TABLE ONLY "OrgUnits"
     ADD CONSTRAINT "orgUnits_pkey" PRIMARY KEY ("ID");
+
+
+--
+-- Name: fki_dest_fkey; Type: INDEX; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE INDEX fki_dest_fkey ON "Events" USING btree (source_id);
+
+
+--
+-- Name: dest_fkey; Type: FK CONSTRAINT; Schema: public; Owner: conrad
+--
+
+ALTER TABLE ONLY "Events"
+    ADD CONSTRAINT dest_fkey FOREIGN KEY (source_id) REFERENCES "Hosts"("ID");
 
 
 --
