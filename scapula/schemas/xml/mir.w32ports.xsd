@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="PortItem" nillable="true" type="PortItem" />
+  <xs:complexType name="PortItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="pid" type="xs:unsignedInt" />
+          <xs:element minOccurs="0" maxOccurs="1" name="process" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="path" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="state" type="PortState" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CreationTime" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" maxOccurs="1" name="localIP" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="remoteIP" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="localPort" type="xs:unsignedInt" />
+          <xs:element minOccurs="1" maxOccurs="1" name="remotePort" type="xs:unsignedInt" />
+          <xs:element minOccurs="1" maxOccurs="1" name="protocol" type="PortProtocol" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ItemBase" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="detectedAnomaly" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="uid" type="xs:string" />
+    <xs:attribute name="created" type="xs:dateTime" use="required" />
+    <xs:attribute name="rowid" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="PortState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="UNKNOWN" />
+      <xs:enumeration value="CLOSED" />
+      <xs:enumeration value="LISTENING" />
+      <xs:enumeration value="SYN_SENT" />
+      <xs:enumeration value="SYN_RECEIVED" />
+      <xs:enumeration value="ESTABLISHED" />
+      <xs:enumeration value="FIN_WAIT_1" />
+      <xs:enumeration value="FIN_WAIT_2" />
+      <xs:enumeration value="CLOSE_WAIT" />
+      <xs:enumeration value="CLOSING" />
+      <xs:enumeration value="LAST_ACK" />
+      <xs:enumeration value="TIME_WAIT" />
+      <xs:enumeration value="DELETING_TCB" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PortProtocol">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TCP" />
+      <xs:enumeration value="UDP" />
+      <xs:enumeration value="IP" />
+      <xs:enumeration value="RAWIP" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

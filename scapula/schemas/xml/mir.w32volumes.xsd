@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="VolumeItem" nillable="true" type="VolumeItem" />
+  <xs:complexType name="VolumeItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="VolumeName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DevicePath" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DriveLetter" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Type" nillable="true" type="VolumeTypeEnum" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SerialNumber" nillable="true" type="xs:long" />
+          <xs:element minOccurs="1" maxOccurs="1" name="FileSystemFlags" nillable="true" type="VolumeFileSystemFlags" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FileSystemName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ActualAvailableAllocationUnits" nillable="true" type="xs:long" />
+          <xs:element minOccurs="1" maxOccurs="1" name="TotalAllocationUnits" nillable="true" type="xs:long" />
+          <xs:element minOccurs="1" maxOccurs="1" name="BytesPerSector" nillable="true" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SectorsPerAllocationUnit" nillable="true" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CreationTime" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsMounted" nillable="true" type="xs:boolean" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ItemBase" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="detectedAnomaly" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="uid" type="xs:string" />
+    <xs:attribute name="created" type="xs:dateTime" use="required" />
+    <xs:attribute name="rowid" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="VolumeTypeEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DRIVE_UNKNOWN" />
+      <xs:enumeration value="DRIVE_NO_ROOT_DIR" />
+      <xs:enumeration value="DRIVE_REMOVABLE" />
+      <xs:enumeration value="DRIVE_FIXED" />
+      <xs:enumeration value="DRIVE_REMOTE" />
+      <xs:enumeration value="DRIVE_CDROM" />
+      <xs:enumeration value="DRIVE_RAMDISK" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="VolumeFileSystemFlags">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="FILE_CASE_SENSITIVE_SEARCH" />
+          <xs:enumeration value="FILE_CASE_PRESERVED_NAMES" />
+          <xs:enumeration value="FILE_UNICODE_ON_DISK" />
+          <xs:enumeration value="FILE_PERSISTENT_ACLS" />
+          <xs:enumeration value="FILE_FILE_COMPRESSION" />
+          <xs:enumeration value="FILE_VOLUME_QUOTAS" />
+          <xs:enumeration value="FILE_SUPPORTS_SPARSE_FILES" />
+          <xs:enumeration value="FILE_SUPPORTS_REPARSE_POINTS" />
+          <xs:enumeration value="FILE_SUPPORTS_REMOTE_STORAGE" />
+          <xs:enumeration value="FILE_VOLUME_IS_COMPRESSED" />
+          <xs:enumeration value="FILE_SUPPORTS_OBJECT_IDS" />
+          <xs:enumeration value="FILE_SUPPORTS_ENCRYPTION" />
+          <xs:enumeration value="FILE_NAMED_STREAMS" />
+          <xs:enumeration value="FILE_READ_ONLY_VOLUME" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ArpEntryItem" nillable="true" type="ArpEntryItem" />
+  <xs:complexType name="ArpEntryItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Interface" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PhysicalAddress" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IPv6Address" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IPv4Address" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CacheType" nillable="true" type="ArpCacheTypes" />
+          <xs:element minOccurs="0" maxOccurs="1" name="InterfaceType" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="State" nillable="true" type="ArpStateTypes" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsRouter" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LastReachable" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LastUnreachable" type="xs:duration" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ItemBase" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="detectedAnomaly" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="uid" type="xs:string" />
+    <xs:attribute name="created" type="xs:dateTime" use="required" />
+    <xs:attribute name="rowid" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="ArpCacheTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Dynamic" />
+      <xs:enumeration value="Static" />
+      <xs:enumeration value="Invalid" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ArpStateTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unreachable" />
+      <xs:enumeration value="Incomplete" />
+      <xs:enumeration value="Probe" />
+      <xs:enumeration value="Delay" />
+      <xs:enumeration value="Stale" />
+      <xs:enumeration value="Reachable" />
+      <xs:enumeration value="Permanent" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

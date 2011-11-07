@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="RouteEntryItem" nillable="true" type="RouteEntryItem" />
+  <xs:complexType name="RouteEntryItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="IsIPv6" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Interface" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Destination" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Gateway" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Netmask" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="RouteType" nillable="true" type="RouteTypes" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Protocol" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ValidLifetime" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PreferredLifetime" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RouteAge" type="xs:duration" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Metric" nillable="true" type="xs:unsignedLong" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsLoopback" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsAutoconfigureAddress" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsPublish" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="IsImmortal" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Origin" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ItemBase" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="detectedAnomaly" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="uid" type="xs:string" />
+    <xs:attribute name="created" type="xs:dateTime" use="required" />
+    <xs:attribute name="rowid" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="RouteTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Other" />
+      <xs:enumeration value="Invalid" />
+      <xs:enumeration value="Direct" />
+      <xs:enumeration value="Indirect" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

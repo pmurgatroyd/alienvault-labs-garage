@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="DnsEntryItem" nillable="true" type="DnsEntryItem" />
+  <xs:complexType name="DnsEntryItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RecordName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RecordType" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TimeToLive" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Flags" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DataLength" nillable="true" type="xs:long" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RecordData" type="RecordData" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ItemBase" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="detectedAnomaly" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="uid" type="xs:string" />
+    <xs:attribute name="created" type="xs:dateTime" use="required" />
+    <xs:attribute name="rowid" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="RecordData">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Host" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IPv4Address" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PrimaryServerName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AdministratorName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SerialNumber" nillable="true" type="xs:long" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Refresh" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Retry" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Expire" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DefaultTimeToLive" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MailboxName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MailboxErrorsName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MxHost" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Preference" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="String" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Blob" type="xs:base64Binary" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Bitmask" nillable="true" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" maxOccurs="1" name="IPv6Address" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Algorithm" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Protocol" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="KeyFlags" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Signer" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TypeCovered" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="LabelCount" nillable="true" type="xs:unsignedByte" />
+          <xs:element minOccurs="0" maxOccurs="1" name="OriginalTimeToLive" type="xs:duration" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ExpirationDate" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DateSigned" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="1" maxOccurs="1" name="KeyTag" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AddressType" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ATMAddress" type="xs:base64Binary" />
+          <xs:element minOccurs="0" maxOccurs="1" name="NextHost" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Type" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TargetHost" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Priority" nillable="true" type="xs:short" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Weight" nillable="true" type="xs:short" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Port" nillable="true" type="xs:short" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Order" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Services" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RegularExpression" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Replacement" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DigestType" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DigestLength" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Digest" type="xs:base64Binary" />
+          <xs:element minOccurs="1" maxOccurs="1" name="KeyLength" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PublicKey" type="xs:base64Binary" />
+          <xs:element minOccurs="0" maxOccurs="1" name="KeyName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Key" type="xs:base64Binary" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CreationDate" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Error" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Mode" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SignatureLength" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Signature" type="xs:base64Binary" />
+          <xs:element minOccurs="1" maxOccurs="1" name="FudgeTime" nillable="true" type="xs:short" />
+          <xs:element minOccurs="1" maxOccurs="1" name="OriginalXid" nillable="true" type="xs:short" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MappingFlag" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="WinsServerIPv4Address" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LookupTimeout" type="xs:duration" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CacheTimeout" type="xs:duration" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

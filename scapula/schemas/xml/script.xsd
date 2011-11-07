@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="script" nillable="true" type="Script" />
+  <xs:complexType name="Script">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="commands" type="ArrayOfScriptCommand" />
+        </xs:sequence>
+        <xs:attribute name="src" type="xs:string" />
+        <xs:attribute name="runat" type="xs:string" />
+        <xs:attribute name="chaining" type="ChainingType" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ScriptCommand">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="input" type="InputSpecification" />
+      <xs:element minOccurs="0" maxOccurs="1" name="result" type="ResultSpecification" />
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="InputSpecification">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="src" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ResultSpecification">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AuditHostScriptCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="script" type="Script" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TIPCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="indicators" type="IndicatorUriList" />
+        </xs:sequence>
+        <xs:attribute name="transfermode" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="IndicatorUriList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="indicator" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IterateAuditResultCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScriptCommand" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AnalysisScriptCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScriptCommand" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HashAnalysisCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="AnalysisScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="operation" type="SetOperation" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="SetOperation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="union" />
+      <xs:enumeration value="complement" />
+      <xs:enumeration value="intersection" />
+      <xs:enumeration value="identity" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ExtractHashCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="AnalysisScriptCommand" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HashDocumentContentCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="AnalysisScriptCommand" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DiffCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="AnalysisScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="field" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="IntersectCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="AnalysisScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="field" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TimelineScriptCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="AnalysisScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="fieldMap" type="TypeFieldMapping" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TypeFieldMapping">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="timeField" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TimeSkewScriptCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="AnalysisScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="offset" type="xs:duration" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ExecuteModuleCommand">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScriptCommand">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="module" type="VersionSelector" />
+          <xs:element minOccurs="0" maxOccurs="1" name="config" />
+          <xs:element minOccurs="0" maxOccurs="1" name="filters" type="ArrayOfFilterModule" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="VersionSelector">
+    <xs:attribute name="name" type="xs:string" />
+    <xs:attribute name="version" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfFilterModule">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="filter" nillable="true" type="FilterModule" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FilterModule">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="module" type="VersionSelector" />
+      <xs:element minOccurs="0" maxOccurs="1" name="config" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfScriptCommand">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="command" nillable="true" type="ScriptCommand" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ChainingType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="implicit" />
+      <xs:enumeration value="explicit" />
+      <xs:enumeration value="none" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ParameterListModuleConfig">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="parameters" type="ArrayOfParameterValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfParameterValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="param" nillable="true" type="ParameterValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ParameterValue">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="value" />
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfString">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

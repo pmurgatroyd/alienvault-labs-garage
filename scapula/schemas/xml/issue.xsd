@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Issue" nillable="true" type="Issue" />
+  <xs:complexType name="Issue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Displayable">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="context" />
+        </xs:sequence>
+        <xs:attribute name="number" type="xs:long" use="required" />
+        <xs:attribute name="level" type="IssueLevel" use="required" />
+        <xs:attribute name="summary" type="xs:string" />
+        <xs:attribute name="code" type="xs:string" />
+        <xs:attribute name="ref" type="xs:string" />
+        <xs:attribute name="context" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Displayable" />
+  <xs:simpleType name="IssueLevel">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Fatal" />
+      <xs:enumeration value="Alert" />
+      <xs:enumeration value="Critical" />
+      <xs:enumeration value="Error" />
+      <xs:enumeration value="Warning" />
+      <xs:enumeration value="Notice" />
+      <xs:enumeration value="Info" />
+      <xs:enumeration value="Debug" />
+      <xs:enumeration value="DebugSystem" />
+      <xs:enumeration value="DebugApp" />
+      <xs:enumeration value="DebugComm" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

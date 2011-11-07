@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="TaskItem" nillable="true" type="TaskItem" />
+  <xs:complexType name="TaskItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="AccountName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="VirtualPath" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="CreationDate" type="xs:dateTime" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AccountRunLevel" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AccountLogonType" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ApplicationName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Comment" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Creator" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ExitCode" type="xs:long" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Flag" type="TaskFlags" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MaxRunTime" type="xs:duration" />
+          <xs:element minOccurs="1" maxOccurs="1" name="MostRecentRunTime" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="NextRunTime" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TriggerList" type="ArrayOfTrigger" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ActionList" type="ArrayOfTaskAction" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Parameters" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Priority" type="TaskPriority" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Status" type="TaskStatus" />
+          <xs:element minOccurs="0" maxOccurs="1" name="WorkItemData" type="xs:base64Binary" />
+          <xs:element minOccurs="0" maxOccurs="1" name="WorkingDirectory" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="md5sum" type="Md5HashSum" />
+          <xs:element minOccurs="0" maxOccurs="1" name="sha1sum" type="Sha1HashSum" />
+          <xs:element minOccurs="0" maxOccurs="1" name="sha256sum" type="Sha256HashSum" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SignatureExists" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="1" maxOccurs="1" name="SignatureVerified" nillable="true" type="xs:boolean" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SignatureDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CertificateSubject" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CertificateIssuer" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ItemBase" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="detectedAnomaly" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="uid" type="xs:string" />
+    <xs:attribute name="created" type="xs:dateTime" use="required" />
+    <xs:attribute name="rowid" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="TaskFlags">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="TASK_FLAG_ZERO" />
+          <xs:enumeration value="TASK_FLAG_INTERACTIVE" />
+          <xs:enumeration value="TASK_FLAG_DELETE_WHEN_DONE" />
+          <xs:enumeration value="TASK_FLAG_DISABLED" />
+          <xs:enumeration value="TASK_FLAG_HIDDEN" />
+          <xs:enumeration value="TASK_FLAG_RUN_ONLY_IF_LOGGED_ON" />
+          <xs:enumeration value="TASK_FLAG_START_ONLY_IF_IDLE" />
+          <xs:enumeration value="TASK_FLAG_SYSTEM_REQUIRED" />
+          <xs:enumeration value="TASK_FLAG_KILL_ON_IDLE_END" />
+          <xs:enumeration value="TASK_FLAG_RESTART_ON_IDLE_RESUME" />
+          <xs:enumeration value="TASK_FLAG_DONT_START_IF_ON_BATTERIES" />
+          <xs:enumeration value="TASK_FLAG_KILL_IF_GOING_ON_BATTERIES" />
+          <xs:enumeration value="TASK_FLAG_RUN_IF_CONNECTED_TO_INTERNET" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfTrigger">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Trigger" nillable="true" type="Trigger" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Trigger">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="TriggerBegin" nillable="true" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="TriggerFrequency" type="TriggerFrequency" />
+      <xs:element minOccurs="1" maxOccurs="1" name="TriggerEnabled" type="xs:boolean" />
+      <xs:element minOccurs="1" maxOccurs="1" name="TriggerEnd" type="xs:dateTime" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TriggerMaxRunTime" type="xs:duration" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TriggerDelay" type="xs:duration" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TriggerSessionChangeType" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TriggerSubscription" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TriggerValueQueries" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TriggerUsername" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="TriggerFrequency">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TASK_TIME_TRIGGER_ONCE" />
+      <xs:enumeration value="TASK_EVENT_TRIGGER_ON_IDLE" />
+      <xs:enumeration value="TASK_EVENT_TRIGGER_AT_SYSTEMSTART" />
+      <xs:enumeration value="TASK_EVENT_TRIGGER_AT_LOGON" />
+      <xs:enumeration value="TASK_TIME_TRIGGER_DAILY" />
+      <xs:enumeration value="TASK_TIME_TRIGGER_WEEKLY" />
+      <xs:enumeration value="TASK_TIME_TRIGGER_MONTHLYDATE" />
+      <xs:enumeration value="TASK_TIME_TRIGGER_MONTHLYDOW" />
+      <xs:enumeration value="TASK_TRIGGER_EVENT" />
+      <xs:enumeration value="TASK_TRIGGER_TIME" />
+      <xs:enumeration value="TASK_TRIGGER_IDLE" />
+      <xs:enumeration value="TASK_TRIGGER_REGISTRATION" />
+      <xs:enumeration value="TASK_TRIGGER_BOOT" />
+      <xs:enumeration value="TASK_TRIGGER_LOGON" />
+      <xs:enumeration value="TASK_TRIGGER_SESSION_STATE_CHANGE" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfTaskAction">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Action" nillable="true" type="TaskAction" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TaskAction">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="ActionType" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="COMClassId" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="COMData" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailBody" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailServer" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailSubject" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailTo" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailCC" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailBCC" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailReplyTo" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailFrom" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EmailAttachments" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ExecProgramPath" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ExecArguments" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ExecWorkingDirectory" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ExecProgramMd5sum" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ExecProgramSha1sum" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ExecProgramSha256sum" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DigitalSignature" type="DigitalSignatureInfo" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ShowMessageTitle" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="ShowMessageBody" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DigitalSignatureInfo">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="SignatureExists" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="1" maxOccurs="1" name="SignatureVerified" nillable="true" type="xs:boolean" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CertificateIssuer" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="CertificateSubject" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="TaskPriority">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HIGH_PRIORITY_CLASS" />
+      <xs:enumeration value="NORMAL_PRIORITY_CLASS" />
+      <xs:enumeration value="IDLE_PRIORITY_CLASS" />
+      <xs:enumeration value="REALTIME_PRIORITY_CLASS" />
+      <xs:enumeration value="ABOVE_NORMAL_PRIORITY_CLASS" />
+      <xs:enumeration value="BELOW_NORMAL_PRIORITY_CLASS" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TaskStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SCHED_S_TASK_READY" />
+      <xs:enumeration value="SCHED_S_TASK_RUNNING" />
+      <xs:enumeration value="SCHED_S_TASK_NOT_SCHEDULED" />
+      <xs:enumeration value="SCHED_E_SERVICE_NOT_RUNNING" />
+      <xs:enumeration value="SCHED_E_UNSUPPORTED_ACCOUNT_OPTION" />
+      <xs:enumeration value="SCHED_E_UNKNOWN_OBJECT_VERSION" />
+      <xs:enumeration value="SCHED_E_NO_SECURITY_SERVICES" />
+      <xs:enumeration value="SCHED_E_ACCOUNT_DBASE_CORRUPT" />
+      <xs:enumeration value="SCHED_E_ACCOUNT_NAME_NOT_FOUND" />
+      <xs:enumeration value="SCHED_E_ACCOUNT_INFORMATION_NOT_SET" />
+      <xs:enumeration value="SCHED_E_INVALID_TASK" />
+      <xs:enumeration value="SCHED_E_CANNOT_OPEN_TASK" />
+      <xs:enumeration value="SCHED_E_SERVICE_NOT_INSTALLED" />
+      <xs:enumeration value="SCHED_E_TASK_NOT_RUNNING" />
+      <xs:enumeration value="SCHED_E_TASK_NOT_READY" />
+      <xs:enumeration value="SCHED_E_TRIGGER_NOT_FOUND" />
+      <xs:enumeration value="SCHED_S_EVENT_TRIGGER" />
+      <xs:enumeration value="SCHED_S_TASK_NO_VALID_TRIGGERS" />
+      <xs:enumeration value="SCHED_S_TASK_TERMINATED" />
+      <xs:enumeration value="SCHED_S_TASK_NO_MORE_RUNS" />
+      <xs:enumeration value="SCHED_S_TASK_HAS_NOT_RUN" />
+      <xs:enumeration value="SCHED_S_TASK_DISABLED" />
+      <xs:enumeration value="TASK_STATE_UNKNOWN" />
+      <xs:enumeration value="TASK_STATE_QUEUED" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Md5HashSum">
+    <xs:simpleContent>
+      <xs:extension base="HashSum" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="HashSum">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="method" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Sha256HashSum">
+    <xs:simpleContent>
+      <xs:extension base="HashSum" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Sha1HashSum">
+    <xs:simpleContent>
+      <xs:extension base="HashSum" />
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

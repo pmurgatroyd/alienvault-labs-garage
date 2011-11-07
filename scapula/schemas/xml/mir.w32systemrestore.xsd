@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="SystemRestoreItem" nillable="true" type="SystemRestoreItem" />
+  <xs:complexType name="SystemRestoreItem">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ItemBase">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="RestorePointName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RestorePointFullPath" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RestorePointDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RestorePointType" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="Created" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ChangeEvent" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ChangeLogEntryFlags" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RegistryHives" type="ArrayOfString" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ChangeLogFileName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="ChangeLogEntrySequenceNumber" type="xs:long" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ProcessName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ChangeLogEntryType" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FileAttributes" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AclChangeUsername" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AclChangeSecurityID" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DebugInfoProcessId" nillable="true" type="xs:unsignedInt" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DebugInfoThreadId" nillable="true" type="xs:unsignedInt" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DebugInfoProcessName" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="DebugInfoTimeStamp" nillable="true" type="xs:dateTime" />
+          <xs:element minOccurs="0" maxOccurs="1" name="OriginalVolumePath" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="OriginalShortFileName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="OriginalFileName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="NewFileName" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="BackupFileName" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ItemBase" abstract="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="detectedAnomaly" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="uid" type="xs:string" />
+    <xs:attribute name="created" type="xs:dateTime" use="required" />
+    <xs:attribute name="rowid" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfString">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="String" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
