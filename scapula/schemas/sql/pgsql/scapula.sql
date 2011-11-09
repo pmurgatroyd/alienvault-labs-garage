@@ -46,10 +46,17 @@ CREATE SEQUENCE analysts_pk_seq
 ALTER TABLE public.analysts_pk_seq OWNER TO conrad;
 
 --
+-- Name: SEQUENCE analysts_pk_seq; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON SEQUENCE analysts_pk_seq IS 'Primary Key for Analysts Table';
+
+
+--
 -- Name: analysts_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
 --
 
-SELECT pg_catalog.setval('analysts_pk_seq', 0, false);
+SELECT pg_catalog.setval('analysts_pk_seq', 1, true);
 
 
 SET default_tablespace = '';
@@ -83,10 +90,17 @@ CREATE SEQUENCE authdomains_pk_seq
 ALTER TABLE public.authdomains_pk_seq OWNER TO conrad;
 
 --
+-- Name: SEQUENCE authdomains_pk_seq; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON SEQUENCE authdomains_pk_seq IS 'Primary Key for Authdomains table';
+
+
+--
 -- Name: authdomains_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
 --
 
-SELECT pg_catalog.setval('authdomains_pk_seq', 0, false);
+SELECT pg_catalog.setval('authdomains_pk_seq', 1, true);
 
 
 --
@@ -115,10 +129,17 @@ CREATE SEQUENCE domains_pk_seq
 ALTER TABLE public.domains_pk_seq OWNER TO conrad;
 
 --
+-- Name: SEQUENCE domains_pk_seq; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON SEQUENCE domains_pk_seq IS 'Primary key for Domains table';
+
+
+--
 -- Name: domains_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
 --
 
-SELECT pg_catalog.setval('domains_pk_seq', 0, false);
+SELECT pg_catalog.setval('domains_pk_seq', 1, true);
 
 
 --
@@ -135,10 +156,31 @@ CREATE TABLE "Domains" (
 ALTER TABLE public."Domains" OWNER TO conrad;
 
 --
+-- Name: TABLE "Domains"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "Domains" IS 'DNS Domains';
+
+
+--
 -- Name: COLUMN "Domains"."ID"; Type: COMMENT; Schema: public; Owner: conrad
 --
 
 COMMENT ON COLUMN "Domains"."ID" IS 'Primary Key';
+
+
+--
+-- Name: COLUMN "Domains".name; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Domains".name IS 'RFC-compliant domain name string';
+
+
+--
+-- Name: COLUMN "Domains".organization_id; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Domains".organization_id IS 'link to the org that owns this domain';
 
 
 --
@@ -211,11 +253,50 @@ SELECT pg_catalog.setval('eventtypes_pk_seq', 0, false);
 --
 
 CREATE TABLE "EventTypes" (
-    "ID" bigint DEFAULT nextval('eventtypes_pk_seq'::regclass) NOT NULL
+    "ID" bigint DEFAULT nextval('eventtypes_pk_seq'::regclass) NOT NULL,
+    name character varying,
+    procedure_id bigint,
+    description character varying,
+    eventsource_id bigint
 );
 
 
 ALTER TABLE public."EventTypes" OWNER TO conrad;
+
+--
+-- Name: TABLE "EventTypes"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "EventTypes" IS 'Event Types are the Events coming in from Security monitoring: Usually these are names of correlation rules and alerts. ';
+
+
+--
+-- Name: COLUMN "EventTypes"."ID"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "EventTypes"."ID" IS 'Primary Key';
+
+
+--
+-- Name: COLUMN "EventTypes".name; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "EventTypes".name IS 'The title of the Event';
+
+
+--
+-- Name: COLUMN "EventTypes".procedure_id; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "EventTypes".procedure_id IS 'Link to the Procedure record that describes how to address the event';
+
+
+--
+-- Name: COLUMN "EventTypes".description; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "EventTypes".description IS 'a longer-form description of what the event represents';
+
 
 --
 -- Name: events_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
@@ -232,6 +313,13 @@ CREATE SEQUENCE events_pk_seq
 ALTER TABLE public.events_pk_seq OWNER TO conrad;
 
 --
+-- Name: SEQUENCE events_pk_seq; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON SEQUENCE events_pk_seq IS 'Primary key for Events table';
+
+
+--
 -- Name: events_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
 --
 
@@ -245,20 +333,108 @@ SELECT pg_catalog.setval('events_pk_seq', 0, false);
 CREATE TABLE "Events" (
     "ID" bigint DEFAULT nextval('events_pk_seq'::regclass) NOT NULL,
     "Timestamp" date,
-    incident_id bigint,
+    case_id bigint,
     type_id bigint NOT NULL,
     source_id bigint,
-    dest_ids bigint[]
+    dest_ids bigint[],
+    "IndicatorOfCompromise" bit(1),
+    rawdata character varying
 );
 
 
 ALTER TABLE public."Events" OWNER TO conrad;
 
 --
+-- Name: TABLE "Events"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "Events" IS 'Security-Relevant Events and Alerts, from Controls';
+
+
+--
 -- Name: COLUMN "Events"."ID"; Type: COMMENT; Schema: public; Owner: conrad
 --
 
 COMMENT ON COLUMN "Events"."ID" IS 'Primary Key';
+
+
+--
+-- Name: COLUMN "Events".case_id; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Events".case_id IS 'Link to the case record this event supports';
+
+
+--
+-- Name: COLUMN "Events".type_id; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Events".type_id IS 'Link to this event''s Type';
+
+
+--
+-- Name: COLUMN "Events"."IndicatorOfCompromise"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Events"."IndicatorOfCompromise" IS 'Is this event an Indicator of Compromise?';
+
+
+--
+-- Name: COLUMN "Events".rawdata; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Events".rawdata IS 'Raw message of the Event';
+
+
+--
+-- Name: GeoLocationRegions; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "GeoLocationRegions" (
+    "ID" bigint NOT NULL,
+    "Region" character varying,
+    "Country" character varying,
+    "Zone" character varying,
+    "Postcode" character varying,
+    "CountryCode" character(2)
+);
+
+
+ALTER TABLE public."GeoLocationRegions" OWNER TO conrad;
+
+--
+-- Name: TABLE "GeoLocationRegions"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "GeoLocationRegions" IS 'Geographic Named Locations';
+
+
+--
+-- Name: COLUMN "GeoLocationRegions"."ID"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "GeoLocationRegions"."ID" IS 'Primary Key';
+
+
+--
+-- Name: COLUMN "GeoLocationRegions"."Region"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "GeoLocationRegions"."Region" IS 'Region within a nation (State, County, Territory, etc)';
+
+
+--
+-- Name: COLUMN "GeoLocationRegions"."Country"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "GeoLocationRegions"."Country" IS 'ISO Country Name';
+
+
+--
+-- Name: COLUMN "GeoLocationRegions"."CountryCode"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "GeoLocationRegions"."CountryCode" IS 'ISO 2-Character Country Code';
 
 
 --
@@ -283,21 +459,24 @@ SELECT pg_catalog.setval('geolocationregions_pk_seq', 0, false);
 
 
 --
--- Name: GeolocationRegions; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+-- Name: GeolocationCities; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
-CREATE TABLE "GeolocationRegions" (
-    "ID" bigint DEFAULT nextval('geolocationregions_pk_seq'::regclass) NOT NULL
+CREATE TABLE "GeolocationCities" (
+    "ID" bigint DEFAULT nextval('geolocationregions_pk_seq'::regclass) NOT NULL,
+    "Region" character varying,
+    "City" character varying,
+    "Country" character varying
 );
 
 
-ALTER TABLE public."GeolocationRegions" OWNER TO conrad;
+ALTER TABLE public."GeolocationCities" OWNER TO conrad;
 
 --
--- Name: COLUMN "GeolocationRegions"."ID"; Type: COMMENT; Schema: public; Owner: conrad
+-- Name: COLUMN "GeolocationCities"."ID"; Type: COMMENT; Schema: public; Owner: conrad
 --
 
-COMMENT ON COLUMN "GeolocationRegions"."ID" IS 'Primary Key';
+COMMENT ON COLUMN "GeolocationCities"."ID" IS 'Primary Key';
 
 
 --
@@ -326,7 +505,11 @@ SELECT pg_catalog.setval('geolocations_pk_seq', 0, false);
 --
 
 CREATE TABLE "Geolocations" (
-    "ID" bigint DEFAULT nextval('geolocations_pk_seq'::regclass) NOT NULL
+    "ID" bigint DEFAULT nextval('geolocations_pk_seq'::regclass) NOT NULL,
+    latitude numeric,
+    longitude numeric,
+    radius numeric,
+    city_id bigint
 );
 
 
@@ -410,6 +593,13 @@ CREATE TABLE "Hosts" (
 ALTER TABLE public."Hosts" OWNER TO conrad;
 
 --
+-- Name: TABLE "Hosts"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "Hosts" IS 'Hosts are discrete working systems (usually a hardware platform) that may have multiple interfaces and addresses';
+
+
+--
 -- Name: COLUMN "Hosts"."ID"; Type: COMMENT; Schema: public; Owner: conrad
 --
 
@@ -417,11 +607,32 @@ COMMENT ON COLUMN "Hosts"."ID" IS 'Primary Key';
 
 
 --
+-- Name: incidents_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
+--
+
+CREATE SEQUENCE incidents_pk_seq
+    START WITH 0
+    INCREMENT BY 1
+    MINVALUE 0
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.incidents_pk_seq OWNER TO conrad;
+
+--
+-- Name: incidents_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
+--
+
+SELECT pg_catalog.setval('incidents_pk_seq', 0, false);
+
+
+--
 -- Name: Incidents; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
 CREATE TABLE "Incidents" (
-    "ID" bigint DEFAULT nextval('hosts_pk_seq'::regclass) NOT NULL,
+    "ID" bigint DEFAULT nextval('incidents_pk_seq'::regclass) NOT NULL,
     creationtime date,
     title character varying,
     impact_id bigint,
@@ -433,10 +644,24 @@ CREATE TABLE "Incidents" (
 ALTER TABLE public."Incidents" OWNER TO conrad;
 
 --
+-- Name: TABLE "Incidents"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "Incidents" IS 'Incidents are Case Groupings that have passed certain thresholds to become active Incidents';
+
+
+--
 -- Name: COLUMN "Incidents"."ID"; Type: COMMENT; Schema: public; Owner: conrad
 --
 
 COMMENT ON COLUMN "Incidents"."ID" IS 'Primary key';
+
+
+--
+-- Name: COLUMN "Incidents".creationtime; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "Incidents".creationtime IS 'Time the incident was first elevated from a Case';
 
 
 --
@@ -515,6 +740,13 @@ CREATE TABLE "IntelligenceIndicators" (
 ALTER TABLE public."IntelligenceIndicators" OWNER TO conrad;
 
 --
+-- Name: TABLE "IntelligenceIndicators"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "IntelligenceIndicators" IS 'Specific IOC''s for mapping event data against';
+
+
+--
 -- Name: COLUMN "IntelligenceIndicators"."ID"; Type: COMMENT; Schema: public; Owner: conrad
 --
 
@@ -555,7 +787,7 @@ SELECT pg_catalog.setval('intelligencesources_pk_seq', 0, false);
 
 CREATE TABLE "IntelligenceSources" (
     "ID" bigint DEFAULT nextval('intelligencesources_pk_seq'::regclass) NOT NULL,
-    name character varying,
+    name character varying NOT NULL,
     location character varying,
     lastupdated date
 );
@@ -571,16 +803,73 @@ COMMENT ON COLUMN "IntelligenceSources"."ID" IS 'Primary Key';
 
 
 --
+-- Name: COLUMN "IntelligenceSources".name; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "IntelligenceSources".name IS 'Short name of the Intelligence Provider. usually the name of the organization.';
+
+
+--
+-- Name: intelligencetype_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
+--
+
+CREATE SEQUENCE intelligencetype_pk_seq
+    START WITH 0
+    INCREMENT BY 1
+    MINVALUE 0
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.intelligencetype_pk_seq OWNER TO conrad;
+
+--
+-- Name: intelligencetype_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
+--
+
+SELECT pg_catalog.setval('intelligencetype_pk_seq', 0, false);
+
+
+--
 -- Name: IntelligenceTypes; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
 CREATE TABLE "IntelligenceTypes" (
-    "ID" bigint NOT NULL,
-    typename character varying NOT NULL
+    "ID" bigint DEFAULT nextval('intelligencetype_pk_seq'::regclass) NOT NULL,
+    typename character varying NOT NULL,
+    typedescription character varying
 );
 
 
 ALTER TABLE public."IntelligenceTypes" OWNER TO conrad;
+
+--
+-- Name: TABLE "IntelligenceTypes"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "IntelligenceTypes" IS 'Intelligence Types describe specific data formats used to map for IOC''s';
+
+
+--
+-- Name: COLUMN "IntelligenceTypes"."ID"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "IntelligenceTypes"."ID" IS 'Primary Key';
+
+
+--
+-- Name: COLUMN "IntelligenceTypes".typename; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "IntelligenceTypes".typename IS 'short form of the Intelligence Datatype name';
+
+
+--
+-- Name: COLUMN "IntelligenceTypes".typedescription; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN "IntelligenceTypes".typedescription IS 'Extended description of what the intel type conveys';
+
 
 --
 -- Name: investigations_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
@@ -615,6 +904,13 @@ CREATE TABLE "Investigations" (
 
 
 ALTER TABLE public."Investigations" OWNER TO conrad;
+
+--
+-- Name: TABLE "Investigations"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "Investigations" IS 'Investigations are a grouping of Incidents, that are likely all tied to the same threat actor or business-impacting event.';
+
 
 --
 -- Name: COLUMN "Investigations"."ID"; Type: COMMENT; Schema: public; Owner: conrad
@@ -694,7 +990,7 @@ CREATE TABLE "Networks" (
     subnet cidr NOT NULL,
     zone character varying,
     description character varying,
-    geolocation_id bigint,
+    site_id bigint,
     domain_id bigint
 );
 
@@ -751,10 +1047,10 @@ COMMENT ON COLUMN "Networks".description IS 'A free-form description of this sub
 
 
 --
--- Name: COLUMN "Networks".geolocation_id; Type: COMMENT; Schema: public; Owner: conrad
+-- Name: COLUMN "Networks".site_id; Type: COMMENT; Schema: public; Owner: conrad
 --
 
-COMMENT ON COLUMN "Networks".geolocation_id IS 'Link to the geolocation for where this subnet is physically located';
+COMMENT ON COLUMN "Networks".site_id IS 'Link to the physical site for where this subnet is physically located';
 
 
 --
@@ -836,7 +1132,10 @@ SELECT pg_catalog.setval('orgunits_pk_seq', 0, false);
 --
 
 CREATE TABLE "OrgUnits" (
-    "ID" bigint DEFAULT nextval('orgunits_pk_seq'::regclass) NOT NULL
+    "ID" bigint DEFAULT nextval('orgunits_pk_seq'::regclass) NOT NULL,
+    name character varying,
+    parent_id bigint,
+    org_id bigint
 );
 
 
@@ -1066,42 +1365,73 @@ COMMENT ON COLUMN "Processes"."ID" IS 'Primary Key';
 
 
 --
--- Name: users_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
+-- Name: RiskFactors; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
-CREATE SEQUENCE users_pk_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.users_pk_seq OWNER TO conrad;
-
---
--- Name: users_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
---
-
-SELECT pg_catalog.setval('users_pk_seq', 0, false);
-
-
---
--- Name: Users; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
---
-
-CREATE TABLE "Users" (
-    "ID" bigint DEFAULT nextval('users_pk_seq'::regclass) NOT NULL
+CREATE TABLE "RiskFactors" (
+    "ID" bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    zone_id character varying,
+    duration interval
 );
 
 
-ALTER TABLE public."Users" OWNER TO conrad;
+ALTER TABLE public."RiskFactors" OWNER TO conrad;
 
 --
--- Name: COLUMN "Users"."ID"; Type: COMMENT; Schema: public; Owner: conrad
+-- Name: RiskLayers; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
 --
 
-COMMENT ON COLUMN "Users"."ID" IS 'Primary Key';
+CREATE TABLE "RiskLayers" (
+    "ID" bigint NOT NULL,
+    name character varying
+);
+
+
+ALTER TABLE public."RiskLayers" OWNER TO conrad;
+
+--
+-- Name: TABLE "RiskLayers"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "RiskLayers" IS 'Geometric Risk layers';
+
+
+--
+-- Name: RiskZones; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "RiskZones" (
+    "ID" bigint NOT NULL,
+    zone polygon NOT NULL
+);
+
+
+ALTER TABLE public."RiskZones" OWNER TO conrad;
+
+--
+-- Name: TABLE "RiskZones"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "RiskZones" IS 'Geometric risk areas';
+
+
+--
+-- Name: Sites; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE "Sites" (
+);
+
+
+ALTER TABLE public."Sites" OWNER TO conrad;
+
+--
+-- Name: TABLE "Sites"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE "Sites" IS 'Physical sites within the organization';
 
 
 --
@@ -1141,48 +1471,6 @@ ALTER TABLE public."Vulnerabilities" OWNER TO conrad;
 --
 
 COMMENT ON COLUMN "Vulnerabilities"."ID" IS 'Primary Key';
-
-
---
--- Name: incidents_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
---
-
-CREATE SEQUENCE incidents_pk_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.incidents_pk_seq OWNER TO conrad;
-
---
--- Name: incidents_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
---
-
-SELECT pg_catalog.setval('incidents_pk_seq', 0, false);
-
-
---
--- Name: intelligencetype_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
---
-
-CREATE SEQUENCE intelligencetype_pk_seq
-    START WITH 0
-    INCREMENT BY 1
-    MINVALUE 0
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.intelligencetype_pk_seq OWNER TO conrad;
-
---
--- Name: intelligencetype_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
---
-
-SELECT pg_catalog.setval('intelligencetype_pk_seq', 0, false);
 
 
 --
@@ -1228,6 +1516,52 @@ SELECT pg_catalog.setval('platforms_pk_seq', 0, false);
 
 
 --
+-- Name: users_pk_seq; Type: SEQUENCE; Schema: public; Owner: conrad
+--
+
+CREATE SEQUENCE users_pk_seq
+    START WITH 0
+    INCREMENT BY 1
+    MINVALUE 0
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_pk_seq OWNER TO conrad;
+
+--
+-- Name: users_pk_seq; Type: SEQUENCE SET; Schema: public; Owner: conrad
+--
+
+SELECT pg_catalog.setval('users_pk_seq', 0, false);
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE TABLE users (
+    "ID" bigint DEFAULT nextval('users_pk_seq'::regclass) NOT NULL
+);
+
+
+ALTER TABLE public.users OWNER TO conrad;
+
+--
+-- Name: TABLE users; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON TABLE users IS 'Users and access accounts';
+
+
+--
+-- Name: COLUMN users."ID"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON COLUMN users."ID" IS 'Primary Key';
+
+
+--
 -- Data for Name: Analysts; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
@@ -1263,7 +1597,7 @@ COPY "EventSources" ("ID", hostname, address, type, network_id, description) FRO
 -- Data for Name: EventTypes; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "EventTypes" ("ID") FROM stdin;
+COPY "EventTypes" ("ID", name, procedure_id, description, eventsource_id) FROM stdin;
 \.
 
 
@@ -1271,15 +1605,23 @@ COPY "EventTypes" ("ID") FROM stdin;
 -- Data for Name: Events; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Events" ("ID", "Timestamp", incident_id, type_id, source_id, dest_ids) FROM stdin;
+COPY "Events" ("ID", "Timestamp", case_id, type_id, source_id, dest_ids, "IndicatorOfCompromise", rawdata) FROM stdin;
 \.
 
 
 --
--- Data for Name: GeolocationRegions; Type: TABLE DATA; Schema: public; Owner: conrad
+-- Data for Name: GeoLocationRegions; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "GeolocationRegions" ("ID") FROM stdin;
+COPY "GeoLocationRegions" ("ID", "Region", "Country", "Zone", "Postcode", "CountryCode") FROM stdin;
+\.
+
+
+--
+-- Data for Name: GeolocationCities; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "GeolocationCities" ("ID", "Region", "City", "Country") FROM stdin;
 \.
 
 
@@ -1287,7 +1629,7 @@ COPY "GeolocationRegions" ("ID") FROM stdin;
 -- Data for Name: Geolocations; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Geolocations" ("ID") FROM stdin;
+COPY "Geolocations" ("ID", latitude, longitude, radius, city_id) FROM stdin;
 \.
 
 
@@ -1343,7 +1685,7 @@ COPY "IntelligenceSources" ("ID", name, location, lastupdated) FROM stdin;
 -- Data for Name: IntelligenceTypes; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "IntelligenceTypes" ("ID", typename) FROM stdin;
+COPY "IntelligenceTypes" ("ID", typename, typedescription) FROM stdin;
 \.
 
 
@@ -1367,7 +1709,7 @@ COPY "KnowledgeBase" ("ID") FROM stdin;
 -- Data for Name: Networks; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Networks" ("ID", address, mask, subnet, zone, description, geolocation_id, domain_id) FROM stdin;
+COPY "Networks" ("ID", address, mask, subnet, zone, description, site_id, domain_id) FROM stdin;
 \.
 
 
@@ -1383,7 +1725,7 @@ COPY "Notes" ("ID") FROM stdin;
 -- Data for Name: OrgUnits; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "OrgUnits" ("ID") FROM stdin;
+COPY "OrgUnits" ("ID", name, parent_id, org_id) FROM stdin;
 \.
 
 
@@ -1428,10 +1770,34 @@ COPY "Processes" ("ID") FROM stdin;
 
 
 --
--- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: conrad
+-- Data for Name: RiskFactors; Type: TABLE DATA; Schema: public; Owner: conrad
 --
 
-COPY "Users" ("ID") FROM stdin;
+COPY "RiskFactors" ("ID", name, description, zone_id, duration) FROM stdin;
+\.
+
+
+--
+-- Data for Name: RiskLayers; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "RiskLayers" ("ID", name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: RiskZones; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "RiskZones" ("ID", zone) FROM stdin;
+\.
+
+
+--
+-- Data for Name: Sites; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY "Sites"  FROM stdin;
 \.
 
 
@@ -1440,6 +1806,14 @@ COPY "Users" ("ID") FROM stdin;
 --
 
 COPY "Vulnerabilities" ("ID") FROM stdin;
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: conrad
+--
+
+COPY users ("ID") FROM stdin;
 \.
 
 
@@ -1455,7 +1829,7 @@ ALTER TABLE ONLY "Events"
 -- Name: GeolocationRegions_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
 --
 
-ALTER TABLE ONLY "GeolocationRegions"
+ALTER TABLE ONLY "GeolocationCities"
     ADD CONSTRAINT "GeolocationRegions_pkey" PRIMARY KEY ("ID");
 
 
@@ -1583,7 +1957,7 @@ ALTER TABLE ONLY "Processes"
 -- Name: Users_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
 --
 
-ALTER TABLE ONLY "Users"
+ALTER TABLE ONLY users
     ADD CONSTRAINT "Users_pkey" PRIMARY KEY ("ID");
 
 
@@ -1619,6 +1993,14 @@ ALTER TABLE ONLY "EventTypes"
 
 
 --
+-- Name: geolocationregions_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
+--
+
+ALTER TABLE ONLY "GeoLocationRegions"
+    ADD CONSTRAINT geolocationregions_pkey PRIMARY KEY ("ID");
+
+
+--
 -- Name: intelligencetypes_pkey; Type: CONSTRAINT; Schema: public; Owner: conrad; Tablespace: 
 --
 
@@ -1642,11 +2024,48 @@ CREATE INDEX fki_dest_fkey ON "Events" USING btree (source_id);
 
 
 --
+-- Name: fki_geolocation_city_fkey; Type: INDEX; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE INDEX fki_geolocation_city_fkey ON "Geolocations" USING btree (city_id);
+
+
+--
+-- Name: fki_procedure_fkey; Type: INDEX; Schema: public; Owner: conrad; Tablespace: 
+--
+
+CREATE INDEX fki_procedure_fkey ON "EventTypes" USING btree (procedure_id);
+
+
+--
 -- Name: dest_fkey; Type: FK CONSTRAINT; Schema: public; Owner: conrad
 --
 
 ALTER TABLE ONLY "Events"
     ADD CONSTRAINT dest_fkey FOREIGN KEY (source_id) REFERENCES "Hosts"("ID");
+
+
+--
+-- Name: geolocation_city_fkey; Type: FK CONSTRAINT; Schema: public; Owner: conrad
+--
+
+ALTER TABLE ONLY "Geolocations"
+    ADD CONSTRAINT geolocation_city_fkey FOREIGN KEY (city_id) REFERENCES "GeolocationCities"("ID") ON UPDATE RESTRICT;
+
+
+--
+-- Name: procedure_fkey; Type: FK CONSTRAINT; Schema: public; Owner: conrad
+--
+
+ALTER TABLE ONLY "EventTypes"
+    ADD CONSTRAINT procedure_fkey FOREIGN KEY (procedure_id) REFERENCES "Procedures"("ID") ON UPDATE RESTRICT;
+
+
+--
+-- Name: CONSTRAINT procedure_fkey ON "EventTypes"; Type: COMMENT; Schema: public; Owner: conrad
+--
+
+COMMENT ON CONSTRAINT procedure_fkey ON "EventTypes" IS 'link to appropriate procedure for this event type';
 
 
 --
