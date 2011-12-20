@@ -1,0 +1,68 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            ec:32:09:67:c9:34:3f:50
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=US, ST=North Carolina, L=Salisbury, O=Internet Widgits Pty Ltd, OU=VeriSign Trust Network, CN=ITU Server/emailAddress=marry.smith@ltu.edu
+        Validity
+            Not Before: Nov  2 06:24:29 2011 GMT
+            Not After : Oct 30 06:24:29 2021 GMT
+        Subject: C=US, ST=North Carolina, L=Salisbury, O=Internet Widgits Pty Ltd, OU=VeriSign Trust Network, CN=ITU Server/emailAddress=marry.smith@ltu.edu
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:cd:b9:de:1a:82:7b:27:61:39:e2:6b:df:01:1c:
+                    b3:f6:76:f9:4a:b3:42:9f:af:70:e7:0b:db:16:5a:
+                    88:4a:d5:f6:a0:c7:2f:ee:0a:da:e8:44:14:18:eb:
+                    83:d1:27:15:e5:43:56:69:7a:5f:bf:ea:1d:a1:65:
+                    e4:83:c9:bb:74:02:dd:2a:38:ae:0e:de:8e:dd:a0:
+                    c4:fc:50:72:cd:02:fd:bb:e6:d7:65:11:19:79:c1:
+                    6c:c4:18:f6:bc:be:35:66:ef:2d:73:b9:87:d6:4b:
+                    82:cd:6f:cb:47:85:39:53:2e:a3:99:63:92:c3:25:
+                    f3:f2:39:ea:ea:48:ce:62:8d
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+                33:6A:D9:16:48:78:0C:A8:7E:66:95:22:E1:B8:7C:2F:C1:9D:B4:3F
+            X509v3 Authority Key Identifier: 
+                keyid:33:6A:D9:16:48:78:0C:A8:7E:66:95:22:E1:B8:7C:2F:C1:9D:B4:3F
+                DirName:/C=US/ST=North Carolina/L=Salisbury/O=Internet Widgits Pty Ltd/OU=VeriSign Trust Network/CN=ITU Server/emailAddress=marry.smith@ltu.edu
+                serial:EC:32:09:67:C9:34:3F:50
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+    Signature Algorithm: sha1WithRSAEncryption
+        28:05:e5:bb:6b:3a:16:e5:60:f6:82:f7:cd:ba:56:54:90:a1:
+        32:56:a9:39:82:d4:a4:d2:a0:f1:c1:ba:d2:42:91:81:d3:e6:
+        ea:d9:91:75:5b:64:cd:fd:9b:c2:d3:59:b0:db:bf:3d:22:28:
+        c3:c3:99:96:38:71:24:df:31:34:73:bd:6e:bb:9e:8b:b3:bc:
+        79:3b:9e:58:7a:3d:78:d6:0b:31:ce:db:38:8e:8c:fc:49:52:
+        7c:12:ef:5c:b2:85:e5:b7:c4:7e:e7:94:0e:2b:1c:80:1d:fa:
+        07:b8:f2:54:bd:75:9e:db:3e:3a:cc:80:c3:44:9b:d8:46:44:
+        26:21
+-----BEGIN CERTIFICATE-----
+MIIEEDCCA3mgAwIBAgIJAOwyCWfJND9QMA0GCSqGSIb3DQEBBQUAMIG3MQswCQYD
+VQQGEwJVUzEXMBUGA1UECBMOTm9ydGggQ2Fyb2xpbmExEjAQBgNVBAcTCVNhbGlz
+YnVyeTEhMB8GA1UEChMYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMR8wHQYDVQQL
+ExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMRMwEQYDVQQDEwpJVFUgU2VydmVyMSIw
+IAYJKoZIhvcNAQkBFhNtYXJyeS5zbWl0aEBsdHUuZWR1MB4XDTExMTEwMjA2MjQy
+OVoXDTIxMTAzMDA2MjQyOVowgbcxCzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0
+aCBDYXJvbGluYTESMBAGA1UEBxMJU2FsaXNidXJ5MSEwHwYDVQQKExhJbnRlcm5l
+dCBXaWRnaXRzIFB0eSBMdGQxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdv
+cmsxEzARBgNVBAMTCklUVSBTZXJ2ZXIxIjAgBgkqhkiG9w0BCQEWE21hcnJ5LnNt
+aXRoQGx0dS5lZHUwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAM253hqCeydh
+OeJr3wEcs/Z2+UqzQp+vcOcL2xZaiErV9qDHL+4K2uhEFBjrg9EnFeVDVml6X7/q
+HaFl5IPJu3QC3So4rg7ejt2gxPxQcs0C/bvm12URGXnBbMQY9ry+NWbvLXO5h9ZL
+gs1vy0eFOVMuo5ljksMl8/I56upIzmKNAgMBAAGjggEgMIIBHDAdBgNVHQ4EFgQU
+M2rZFkh4DKh+ZpUi4bh8L8GdtD8wgewGA1UdIwSB5DCB4YAUM2rZFkh4DKh+ZpUi
+4bh8L8GdtD+hgb2kgbowgbcxCzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBD
+YXJvbGluYTESMBAGA1UEBxMJU2FsaXNidXJ5MSEwHwYDVQQKExhJbnRlcm5ldCBX
+aWRnaXRzIFB0eSBMdGQxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsx
+EzARBgNVBAMTCklUVSBTZXJ2ZXIxIjAgBgkqhkiG9w0BCQEWE21hcnJ5LnNtaXRo
+QGx0dS5lZHWCCQDsMglnyTQ/UDAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBBQUA
+A4GBACgF5btrOhblYPaC9826VlSQoTJWqTmC1KTSoPHButJCkYHT5urZkXVbZM39
+m8LTWbDbvz0iKMPDmZY4cSTfMTRzvW67nouzvHk7nlh6PXjWCzHO2ziOjPxJUnwS
+71yyheW3xH7nlA4rHIAd+ge48lS9dZ7bPjrMgMNEm9hGRCYh
+-----END CERTIFICATE-----
