@@ -129,8 +129,8 @@ class ClusterGroup(object):
             #print "switch current Node to " + str(id(currentNode))
 
 
-    def BuildLogLine(self,Node):
-        if (len(Node.Children) == 0): #I have loads of siblings- I'm a variable at the end of a line       
+    def IsEndNode(self,Node):
+        if (len(Node.Children) == 0): #I'm an EndNode       
             Node.PrintPath()
             return True
         return False    
@@ -152,32 +152,32 @@ class ClusterGroup(object):
         print "RESULTS"
         for node1 in self.rootNode.Children:
             for node2 in node1.Children:
-                if self.BuildLogLine(node2)== True : break 
+                if self.IsEndNode(node2)== True : break 
                 
                 for node3 in node2.Children:
-                    if self.BuildLogLine(node3) == True : break 
+                    if self.IsEndNode(node3) == True : break 
             
                     for node4 in node3.Children:
-                        if self.BuildLogLine(node4) == True : break 
+                        if self.IsEndNode(node4) == True : break 
             
                         for node5 in node4.Children:
-                            if self.BuildLogLine(node5) == True : break 
+                            if self.IsEndNode(node5) == True : break 
                             
                             for node6 in node5.Children:
-                                if self.BuildLogLine(node6) == True : break 
+                                if self.IsEndNode(node6) == True : break 
             
                                 for node7 in node6.Children:
-                                    if self.BuildLogLine(node7) == True : break 
+                                    if self.IsEndNode(node7) == True : break 
             
                                     for node8 in node7.Children:
-                                        if self.BuildLogLine(node8) == True : break 
+                                        if self.IsEndNode(node8) == True : break 
                 
                                         for node9 in node8.Children:
-                                            if self.BuildLogLine(node9) == True : break 
+                                            if self.IsEndNode(node9) == True : break 
                     
                                             for node10 in node9.Children:
-                                                if self.BuildLogLine(node10) == True : break 
+                                                if self.IsEndNode(node10) == True : break 
                         
                                                 for node11 in node10.Children:
-                                                    if self.BuildLogLine(node11) == True : break 
+                                                    if self.IsEndNode(node11) == True : break 
 
