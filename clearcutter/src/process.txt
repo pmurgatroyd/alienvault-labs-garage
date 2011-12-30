@@ -1,0 +1,37 @@
+
+take log line
+
+ 	- Match and replace common regexps
+ 		- syslog datetime
+ 		- ip address
+
+	- Sort the content into a new file
+
+
+pass each line in new file to each cluster group
+	- cluster group breaks down the line and tries to match it to its own clusters
+	- if it doesn't match any existing cluster group, create a new group
+ 
+ spit out each cluster group as some samples, and a regexp
+ 
+ 
+ Cluster Group()
+ 		
+ 	- Split the logline up into delimited cells
+ 		- record the delimiter
+	- Recurse around, using common delimiters
+	 	' - ' 
+	 	':'
+	 	' : ' 
+	 - Make each delimeter its own cluster too
+	 
+	- linked lists? by number of children, parents?
+	
+	- count the number of nodes at each level
+		- nodes with only one value are fixed
+		- nodes with more than one value are variables
+		- work on multipositioned stuff later?
+	- list of lists?
+
+	
+	
