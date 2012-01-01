@@ -1,10 +1,15 @@
+"""
+Clusters Locate clusters of test in Logfiles, to assist in processing discrete log messages,
+from any given log data sample and assist in the creation of Regular Expression to parse those log entries
+"""
+
 import re
 
 def FindCommonRegex(teststring):
     """
     Test the string against a list of regexs for common data types, and return a placeholder for that datatype if found
     """
-    #liases['PORT']="\d{1,5}"
+    #aliases['PORT']="\d{1,5}"
     aliases = {}
     aliases['IPV4']="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
     aliases['IPV6_MAP']="::ffff:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"
