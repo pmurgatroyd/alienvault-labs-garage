@@ -3,6 +3,8 @@ Clusters Locate clusters of test in Logfiles, to assist in processing discrete l
 from any given log data sample and assist in the creation of Regular Expression to parse those log entries
 """
 
+#TODO: Remove all printing code and store internally: have presentation layer do output
+
 import re
 
 def FindCommonRegex(teststring):
@@ -154,7 +156,7 @@ class ClusterGroup(object):
         
     
     def Results(self):
-        print "RESULTS"
+        print "\n========== Potential Unique Log Events ==========\n"
         for node1 in self.rootNode.Children:
             for node2 in node1.Children:
                 if self.IsEndNode(node2)== True : break 
