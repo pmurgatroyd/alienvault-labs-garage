@@ -4,6 +4,9 @@ from any given log data sample and assist in the creation of Regular Expression 
 """
 
 #TODO: Remove all printing code and store internally: have presentation layer do output
+#TODO: More Regexp Patterns
+#TODO: Quoted Text Grouping
+
 
 import re
 

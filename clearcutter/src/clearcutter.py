@@ -92,8 +92,16 @@ mode = {'extract' : DoLogExtract, 'parse' : DoLogParse, 'profile' : DoLogProfile
         
 def ParseArgs():
     parser = argparse.ArgumentParser(description='Processes log files for SIEM consumption')
+        
     parser.add_argument('mode', action='store',choices=['extract','parse','profile'], help='extract (find potential unique log event types) ------ parse (parse a log file using an OSSIM plugin config)\nprofile (generate performance data) ')
     parser.add_argument('filename', action='store',help='log file to process')
+    
+    extractgroup = parser.add_argument_group('Log Event Message Type Extraction')
+    
+    parsegroup = parser.add_argument_group('OSSIM Plugin Parse Testing')
+    
+    profilegroup = parser.add_argument_group('OSSIM Plugin Performance Profiling')
+    
     args = parser.parse_args()
     
     if args.mode not in mode.iterkeys():
