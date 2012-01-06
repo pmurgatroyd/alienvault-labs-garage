@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import clusters,sys,argparse
 
 log = ''
@@ -91,7 +92,7 @@ mode = {'extract' : DoLogExtract, 'parse' : DoLogParse, 'profile' : DoLogProfile
         
 def ParseArgs():
     parser = argparse.ArgumentParser(description='Processes log files for SIEM consumption')
-    parser.add_argument('mode', action='store',default='extract', help='extract (find potential unique log event types\n')
+    parser.add_argument('mode', action='store',choices=['extract','parse','profile'], help='extract (find potential unique log event types) ------ parse (parse a log file using an OSSIM plugin config)\nprofile (generate performance data) ')
     parser.add_argument('filename', action='store',help='log file to process')
     args = parser.parse_args()
     
