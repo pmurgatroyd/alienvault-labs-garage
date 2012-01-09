@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+
+'''ClearCutter - a general purpose log analysis tool with OSSIM-specific features'''
+
+__author__ = "CP Constantine"
+__email__ = "conrad@alienvault.com"
+__copyright__ = 'Alienvault 2012'
+__credits__ = ["Conrad Constantine","Dominique Karg"]
+__version__ = "$Revision: 63990 $"
+__license__ = "GPL"
+__status__ = "Prototype"
+__maintainer__ = "CP Constantine"
+
 import sys,argparse,clusters #,ccregex
 
 log = ''
@@ -81,37 +93,45 @@ def DoLogParse(args):
     myregexps.Parse()
     #import logregex
     #process log from plugin
-    pass
+    print "Not Yet Implemented"
+    sys.exit()
 
 def DoLogProfile():
     """Commence OSSIM SID Profiling"""
     # Prep Profiling
     # Do the regular logparse
     # Process and print the results
-    pass
+    print "Not Yet Implemented"
+    sys.exit()
+
 
 
 #=========================
 mode = {'extract' : DoLogExtract, 'parse' : DoLogParse, 'profile' : DoLogProfile}
         
 def ParseArgs():
-    parser = argparse.ArgumentParser(description='Processes log files for SIEM consumption')
+    parser = argparse.ArgumentParser(formatter_class = argparse.RawDescriptionHelpFormatter, \
+                                     description='Processes log files for SIEM consumption',
+                                     epilog='examples:\n\t%(prog)s identify sample.log\n\t%(prog)s parse plugin.cfg sample.log\n\t%(prog)s profile plugin.cfg sample.log')
+    modeparsers = parser.add_subparsers(help='Command Mode Help')
         
-    parser.add_argument('mode', action='store',choices=['extract','parse','profile'], help='extract (find potential unique log event types) ------ parse (parse a log file using an OSSIM plugin config)\nprofile (generate performance data) ')
-    parser.add_argument('-v', type=int, action='store',help='verbose mode')
-        
-    extractgroup = parser.add_argument_group('Log Event Message Type Extraction')
-    extractgroup.add_argument('filename', action='store',help='log file to process')
-    extractgroup.add_argument('threshold', type=int, action='store',help='log file to process')
+    parser.add_argument('-v', action='count',help='verbose mode - use multiple times to increase verbosity')
+    parser.add_argument('-q', action='store_true',help='quiet mode - print nothing but results')
+    parser.add_argument('-o', action='store', type = str, metavar = 'file' , help='Write results to <file>')
     
-       
-    parsegroup = parser.add_argument_group('OSSIM Plugin Parse Testing')
-    parsegroup.add_argument('plugin', action='store',help='OSSIM plugin .cfg file')
-    #parsegroup.add_argument()
-    #parsegroup.add_argument()
+    logextractparser = modeparsers.add_parser('identify',help='Log Event Candidate Identification')
+    logextractparser.add_argument('extract - Log Event Message Type Extraction')
+    logextractparser.add_argument('filename', action='store',help='log file to process')
+    logextractparser.add_argument('-t', '--threshold', type=int, action='store', help='Threshold value for Variable Assignment', )
     
-    profilegroup = parser.add_argument_group('OSSIM Plugin Performance Profiling')
-    profilegroup.add_argument('plugin', action='store',help='OSSIM plugin .cfg file')
+    logparseparser = modeparsers.add_parser('parse',help = 'OSSIM Plugin Parse Testing')
+    logparseparser.add_argument('plugin', action='store',help='OSSIM plugin .cfg file')
+    logparseparser.add_argument('-n', action='store',help='Show Matching values from position N')    
+    
+    profileparser = modeparsers.add_parser('profile',help = 'OSSIM Plugin Performance Profiling')
+    profileparser.add_argument('plugin', action='store',help='OSSIM plugin .cfg file')
+    profileparser.add_argument('-s','--sort', action='store_true',help='Sort Results by Execution Time')
+    
     #profilegroup.add_argument()
     #profilegroup.add_argument()
     
