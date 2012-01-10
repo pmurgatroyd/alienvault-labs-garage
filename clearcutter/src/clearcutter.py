@@ -11,15 +11,17 @@ __license__ = "GPL"
 __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
-import sys,argparse,clusters,ccregex
+import sys,os,argparse,clusters,ccregex,progressbar
 
 
 class LogFile(object):
     '''
-    CLog File object with a few helper functions for other clearcutter modes
+    Log File object with a few helper functions for other clearcutter modes
     '''    
     _filedata = ""
     Filename = ""
+    Length = 0
+    Position = 0
     
     def __init__(self, filename, verbose=False):
         self.Filename = filename
@@ -32,14 +34,11 @@ class LogFile(object):
         except IOError:
             if verbose == True : print "File Access Error: " + sys.exc_info()[2]
             raise sys.exc_info()
+        self.Length = os.path.getsize(filename)
         
     def RetrieveCurrentLine(self, verbose=False ):
-        if verbose == True : print "Reading Line " + self._filedata.tell()
+        self.Position = self._filedata.tell()        
         return self._filedata.readline()
-    
-        
-        # build a spinner?
-                
         
 def DoLogExtract(args):
     """Commence Log Message Extraction mode""" 
@@ -48,15 +47,19 @@ def DoLogExtract(args):
     except IOError:
         print "File: " + log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
         sys.exit()
-      
+    if args.v > 0 : print "Processing Log File "  + log.Filename + ":" + str(log.Length) + " bytes" 
     myclusters = clusters.ClusterGroup()
     logline = log.RetrieveCurrentLine() 
-    while logline != "":
-        #update progress bar
+    widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
+    pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
+    while logline != "": #TODO: Make this actually exit on EOF
         myclusters.IsMatch(logline)
+        pbar.update((1.0 * log.Position / log.Length) * 100)
         logline = log.RetrieveCurrentLine()
         
+    pbar.finish()
     myclusters.Results()
+
     
 def DoLogParse(args):
     """Commence Plugin Parsing Mode"""
@@ -81,9 +84,9 @@ def DoLogProfile():
     sys.exit()
 
 
-
-#=========================
-mode = {'identify' : DoLogExtract, 'parse' : DoLogParse, 'profile' : DoLogProfile}
+#=========================1
+#Map Arg Modes to Launch functions
+mode = {'identify' : DoLogExtract, 'parse' : DoLogParse, 'profile' : DoLogProfile} 
         
 def ParseArgs():
     parser = argparse.ArgumentParser(formatter_class = argparse.RawDescriptionHelpFormatter, \
@@ -118,12 +121,8 @@ def ParseArgs():
     profileparser.add_argument('-o', action='store', type = str, metavar = 'file' , help='Write results to <file>')
     
     globalargs = parser.parse_args()
-    print globalargs
     
-    if globalargs.mode not in mode.iterkeys():
-        parser.print_usage(None)
-    else:
-        mode[globalargs.mode](globalargs)
+    mode[globalargs.mode](globalargs)
 
 if __name__ == '__main__':
     ParseArgs()
