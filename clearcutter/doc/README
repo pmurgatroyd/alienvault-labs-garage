@@ -21,6 +21,8 @@ Eg. the sequence
 can be expressed as "Login session from user <user> from host <host>" (with an accompanyying begin and end time)
 
 
-Parse - 
+Parse - This mode is for matching a list of regular expressions to the content of a log file, and statistically
+identifying the log contents that match the list of expressions (matched and unmatched) both in total and per regexp.
+Also has an option to take the regexps from a OSSIM device plugin .cfg file.
 
 Profile - 

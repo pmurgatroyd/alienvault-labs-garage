@@ -10,16 +10,9 @@ import ConfigParser
 class ParsePlugin(object):
     """Processes Log Data against an OSSIM collector plugin"""
     
-    options = {
-               'ParseFile': False,
-               'ParsePlugin': False,
-               'ParseSingleRegexp' : False,
-               'PrintMatching' : False,
-               'PrintNoMatching': False,
-               'ProfileSID' : False,
-               'ProfileLog' : False,
-               'PluginCFG' : ""
-               }
+    options = ''
+    plugincfg = ''
+    regexps = {}
 
     aliases = {
                'IPV4' :"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
@@ -32,65 +25,65 @@ class ParsePlugin(object):
                'SYSLOG_WY_DATE' : "\w+\s+\d{1,2}\s\d{4}\s\d\d:\d\d:\d\d",
               }
 
-    plugincfg = ''
 
-    def hitems(config, section):
+    def hitems(self,config, section):
         hash = {}
         for item in config.items(section):
-            hash[item[0]] = _strip_value(item[1])
+            hash[item[0]] = self._strip_value(item[1])
         return hash
     
-    def _strip_value(value):
+    def _strip_value(self,value):
         from string import strip
         return strip(strip(value, '"'), "'")
     
-    def get_entry(config, section, option):
+    def get_entry(self,config, section, option):
         value = config.get(section, option)
-        value = _strip_value(value)
+        value = self._strip_value(value)
         return value
 
   
 
     def Parse(self,logfile):
-        pass
-        # Sanity Checks for Config
 
-        f = open(args.filename, 'r')   #REPLACE WITH ARGS 
+        f = open(self.options.filename, 'r')   #REPLACE WITH ARGS 
         data = f.readlines()
-        cfg_file=args.cfgfile
-        if Options[ParseSingleRegexp] == true:
-            print "Multiple regexp mode used, parsing %s " % exp
-        
+        cfg_file=self.options.cfgfile
         line_match = 0    
         matched = 0
     
-        print "-----------------------------------------------------------------------------"
-    
-        for key in keys:
-            print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times" % (str(key), rule_stats.count(str(key)))
-    
-       
 
     def LoadPlugin(self):
-        pass
-    
-    def LoadLogFile(self):
-        pass
+        SECTIONS_NOT_RULES = ["config", "info", "translation"]
+        rules = {}
+        sorted_rules = {}
+        rule_stats = []
+
+        config = ConfigParser.RawConfigParser()
+        config.read(self.options.regexp)
+        for section in config.sections():
+            if section.lower() not in SECTIONS_NOT_RULES :
+                rules[section] = self.hitems(config,section)
+        keys = rules.keys()
+        keys.sort()
+                
 
     def PrintResults(self):
+        for key in keys:
+            print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times" % (str(key), rule_stats.count(str(key)))
+   
         print "Counted", len(data), "lines."
         print "Matched", matched, "lines."
     
     
     def ParseLog(self):
-        for line in data:
-            for rule in rules.iterkeys():
+        for line in self.data:
+            for rule in self.rules.iterkeys():
                 rulename = rule
-                regexp = get_entry(config, rule, 'regexp')
+                regexp = self.get_entry(plugincfg, rule, 'regexp')
                 if regexp is "":
                     continue
                 # Replace vars
-                for alias in aliases:
+                for alias in self.aliases:
                     tmp_al = ""
                     tmp_al = "\\" + alias;
                     regexp = regexp.replace(tmp_al,aliases[alias])
@@ -123,53 +116,7 @@ class ParsePlugin(object):
                 matched += 1
                 break
     
-    def ParseSingleRegex(regexp):
-     # single regexp mode
-        for line in data:
-            result = re.findall(exp,line)
-            try:
-                tmp = result[0]
-            except IndexError:
-                if sys.argv[3] is "y":
-                    print "Not matched:", line
-                continue
-            # Matched
-            if sys.argv[3] is "v":
-                print line
-            if sys.argv[3] is "V":
-                print exp
-                print line
-            try:
-                if int(sys.argv[3]) > 0:
-                    print "Match $%d: %s" % (int(sys.argv[3]),tmp[int(sys.argv[3])-1])
-                    #print "Match %d: %s" % (int(sys.argv[3]),result[int(sys.argv[3])])
-                else: 
-                    if sys.argv[3] is not "q":
-                        print result
-            except ValueError:
-                if sys.argv[3] is not "q":
-                    print result
-            matched += 1
-    
-        print "Counted", len(data), "lines."
-        print "Matched", matched, "lines."
         
-    
-    def ParsePluginSIDs(self):
-        SECTIONS_NOT_RULES = ["config", "info", "translation"]
-        rules = {}
-        sorted_rules = {}
-        rule_stats = []
-        # .cfg file mode
-        config = ConfigParser.RawConfigParser()
-        config.read(options['PluginCFG'])
-        for section in config.sections():
-            if section.lower() not in SECTIONS_NOT_RULES :
-                rules[section] = hitems(config,section)
-        keys = rules.keys()
-        keys.sort()
-                
-
     def __init__(self,args):
         pass
         # parse args into options

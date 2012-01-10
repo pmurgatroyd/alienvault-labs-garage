@@ -4,14 +4,14 @@
 
 __author__ = "CP Constantine"
 __email__ = "conrad@alienvault.com"
-__copyright__ = 'Alienvault 2012'
+__copyright__ = 'Copyright:Alienvault 2012'
 __credits__ = ["Conrad Constantine","Dominique Karg"]
 __version__ = "0.1"
 __license__ = "GPL"
 __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
-import sys,os,argparse,clusters,ccregex,progressbar
+import sys,os,argparse,clusters,ccregex,progressbar,mmap
 
 
 class LogFile(object):
@@ -23,8 +23,22 @@ class LogFile(object):
     Length = 0
     Position = 0
     
-    def __init__(self, filename, verbose=False):
+    def __init__(self, filename, verbose=False, memory=True):
         self.Filename = filename
+        try:
+            self.Length = os.path.getsize(filename)
+        except IOError:  #problem loading file
+            print "Could not open log file : " + filename + " - " + sys.exc_info()[2]
+            sys.exit()
+        
+        if (memory == True and self.Length < 2147483648):
+            if verbose == True: print "Loading file into RAM"
+            filehandle = open(filename,'r')            
+            self._filedata = filehandle.readlines()
+        else:
+            if verbose == True: print "Reading from Disk"
+            self._filedata = open(filename,'r')
+            
         try:             
             if verbose == True : print "Using File: " + filename
             self._filedata = open(filename,'r')
@@ -35,10 +49,10 @@ class LogFile(object):
             if verbose == True : print "File Access Error: " + sys.exc_info()[2]
             raise sys.exc_info()
         self.Length = os.path.getsize(filename)
-        
+    
     def RetrieveCurrentLine(self, verbose=False ):
         self.Position = self._filedata.tell()        
-        return self._filedata.readline()
+        return self._filedata.readline() #Fix for in-memory
         
 def DoLogExtract(args):
     """Commence Log Message Extraction mode""" 
@@ -51,13 +65,13 @@ def DoLogExtract(args):
     myclusters = clusters.ClusterGroup()
     logline = log.RetrieveCurrentLine() 
     widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
-    pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
+    if args.q != True : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
     while logline != "": #TODO: Make this actually exit on EOF
         myclusters.IsMatch(logline)
-        pbar.update((1.0 * log.Position / log.Length) * 100)
+        if args.q != True : pbar.update((1.0 * log.Position / log.Length) * 100)
         logline = log.RetrieveCurrentLine()
         
-    pbar.finish()
+    if args.q != True : pbar.finish()
     myclusters.Results()
 
     
@@ -97,31 +111,41 @@ def ParseArgs():
     identifyparser = modeparsers.add_parser('identify',help='Log Event Candidate Identification')
     identifyparser.set_defaults(mode='identify') 
     identifyparser.add_argument(dest='logfile', action='store', type=str, help='log file to process')
-    identifyparser.add_argument('-t', action='store', type=int, help='Threshold value for Variable Assignment', )
-    identifyparser.add_argument('-v', action='count',help='verbose mode - use multiple times to increase verbosity')
-    identifyparser.add_argument('-q', action='store_true',help='quiet mode - print nothing but results')
-    identifyparser.add_argument('-o', action='store', type = str, metavar = 'file' , help='Write results to <file>')
+    identifyparser.add_argument('-t','--threshold', action='store', type=int, help='Threshold value for Variable Assignment', )
+    identifyparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')
+    identifyparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
+    identifyparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
+    identifyparser.add_argument('-R','--regexp', action='store', type = str, metavar = 'regexp' , help='Display results in Regular expression format')
     
     
-    pluginparser = modeparsers.add_parser('parse',help = 'OSSIM Plugin Parse Testing')
+    sequenceparser = modeparsers.add_parser('sequence',help='identify sequences of log messages')
+    sequenceparser.set_defaults(mode='sequence') 
+    sequenceparser.add_argument(dest='logfile', action='store', type=str, help='log file to process')
+    #sequenceparser.add_argument('-t', action='store', type=int, help='Threshold value for Variable Assignment', )
+    #sequenceparser.add_argument('-v', action='count',help='verbose mode - use multiple times to increase verbosity')
+    #sequenceparser.add_argument('-q', action='store_true',help='quiet mode - print nothing but results')
+    #sequenceparser.add_argument('-o', action='store', type = str, metavar = 'file' , help='Write results to <file>')
+    
+       
+    pluginparser = modeparsers.add_parser('parse',help = 'Parse regex list against logfile')
     pluginparser.set_defaults(mode='parse')
-    pluginparser.add_argument(dest='plugin', action='store', type=str,help='OSSIM plugin .cfg file')
-    pluginparser.add_argument('-n', action='store', type=int, help='Show Matching values from position N')    
-    pluginparser.add_argument('-v', action='count',help='verbose mode - use multiple times to increase verbosity')
-    pluginparser.add_argument('-q', action='store_true',help='quiet mode - print nothing but results')
-    pluginparser.add_argument('-o', action='store', type = str, metavar = 'file' , help='Write results to <file>')
+    pluginparser.add_argument(dest='regexps', metavar='file', action='store', type=str,help='File containing list of Regular expressions')
+    pluginparser.add_argument('-P','--plugin', action='store_true',help='Regexp file is an OSSIM plugin .cfg file')
+    pluginparser.add_argument('-n','--nomatch', action='store', type=int, help='Show Matching values from position N')    
+    pluginparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')
+    pluginparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
+    pluginparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
     
     
-    profileparser = modeparsers.add_parser('profile',help = 'OSSIM Plugin Performance Profiling')
+    profileparser = modeparsers.add_parser('profile',help = 'Profile performance of regex list against logile')
     profileparser.set_defaults(mode='profile')
     profileparser.add_argument('plugin', action='store', type=str,help='OSSIM plugin .cfg file')
     profileparser.add_argument('-s','--sort', action='store_true',help='Sort Results by Execution Time')
-    profileparser.add_argument('-v', action='count',help='verbose mode - use multiple times to increase verbosity')
-    profileparser.add_argument('-q', action='store_true',help='quiet mode - print nothing but results')
-    profileparser.add_argument('-o', action='store', type = str, metavar = 'file' , help='Write results to <file>')
+    profileparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')
+    profileparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
+    profileparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
     
     globalargs = parser.parse_args()
-    
     mode[globalargs.mode](globalargs)
 
 if __name__ == '__main__':
