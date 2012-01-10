@@ -6,7 +6,7 @@ from any given log data sample and assist in the creation of Regular Expression 
 #TODO: Remove all printing code and store internally: have presentation layer do output
 #TODO: More Regexp Patterns
 #TODO: Quoted Text Grouping
-
+#TODO: During Nephew Check, compare against the ones with the most children first (more likely to find a match)
 
 import re
 
@@ -41,12 +41,13 @@ class ClusterNode(object):
     Children = []
     Content = ""
     Parent = None
+    ContentHash = ""
  
     def __init__(self,NodeContent="Not Provided"):
         self.Children = []
         self.Content = NodeContent
         #print "Created new Node " + str(id(self)) + " with content : " + self.Content      
-        
+        self.ContentHash = hash(NodeContent)
     
     def GetChildren(self):
         return self.Children
@@ -60,7 +61,7 @@ class ClusterNode(object):
             return None
         else:
             for child in self.Children:
-                if (child.Content == MatchContent):
+                if (child.ContentHash == hash(MatchContent)):
                     #print "Found Child Match : " + child.Content
                     return child
                 else:
@@ -72,7 +73,7 @@ class ClusterNode(object):
         if self.Parent == None: #This node is the root node
             return None
         for sibling in self.Parent.Children:
-            if len(sibling.Children) > 0 :  # no point if we don't have any siblings
+            if len(sibling.Children) > 0 :  # no point if sibling has no children
                 for child in sibling.Children: #let's see which child node this matches  
                     if (child.Content == MatchContent):
                         return child

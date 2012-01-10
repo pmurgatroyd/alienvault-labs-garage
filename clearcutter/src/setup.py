@@ -11,7 +11,7 @@ setup(name='clearcutter',
       author='Conrad Constantine',
       author_email='conrad@alienvault.com',
       url = 'http://http://code.google.com/p/alienvault-labs-garage/',
-      py_modules = ['clusters'],
+      py_modules = ['clusters','progressbar'],
       scripts=[
                'clearcutter.py'
                ],

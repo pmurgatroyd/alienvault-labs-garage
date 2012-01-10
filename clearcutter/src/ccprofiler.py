@@ -1,8 +1,8 @@
 import cProfile
 
 def ProfileRegex(regexp):
-    profile = cProfile.run(statement, filename, sort)
-    profile.
+    profile = cProfile.run(regexp, filename, sort)
+    
 
 def ProfileRegexAgainstLog(regexp):
     pass
