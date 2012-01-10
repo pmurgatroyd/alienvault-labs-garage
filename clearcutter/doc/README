@@ -1,0 +1,26 @@
+Clearcutter is a tool for general log analysis, with the aim of automating many of the processes that have
+traditionally been done manually by security analysts handling unfamiliar log files.
+
+Presently it supports four major modes of operation (two of which are specific to Alienvault OSSIM)
+
+Identify - Locate 'unique' log messages within a log sample. By unique here, we mean the actual log message itself,
+regardless of the variable content. E.G. the log message "User admin logged into host gateway" is a unique log entry, 
+where the text 'admin' and 'gateway' are variable content, but the unique log message is "user <user> logged into host <host>"
+Identifying the specific log messages present in a log file is a key first step to further log processsing.
+
+Sequence - The variable fields identified in the specific event messages are what identify sequences of logs that 
+identify specific behavioral actions. These sequences of actions are key to contexting logs into forensic nodes.
+Eg. the sequence
+	- <PID> Connection from host <IP>
+	- <PID> Valid Key Exchange from host <IP>
+	- <PID> User <user> is valid
+	- <PID> user <user> authenticated successfully
+	- <PID> new session <sessionID> started for user <user>
+	- <PID> session <sessionID> disconnected
+
+can be expressed as "Login session from user <user> from host <host>" (with an accompanyying begin and end time)
+
+
+Parse - 
+
+Profile - 
