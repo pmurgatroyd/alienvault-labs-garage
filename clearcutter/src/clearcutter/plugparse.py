@@ -63,9 +63,24 @@ class ParsePlugin(object):
         self.plugincfg.read(self.options.regexps)
         for section in self.plugincfg.sections():
             if section.lower() not in SECTIONS_NOT_RULES :
-                self.regexps[section] = self.hitems(self.plugincfg,section)
+                if self.IsValidRegex(self.get_entry(self.plugincfg, section, 'regexp')):
+                    self.regexps[section] = self.hitems(self.plugincfg,section)
+
         self.keys = self.regexps.keys()
         self.keys.sort()
+
+
+    def LoadRegexps(self):
+        self.regexps = file(self.options.regexps,'r').readlines()
+
+    def IsValidRegex(self,regex):
+        try:
+            test = re.compile(regex, flags=0)
+            return True
+        except re.error:
+            sys.stderr.write("\033[91m Regular Expression : " + regex + " is not a valid regular expression \033[0m\n")
+            sys.stderr.flush()
+            return False
 
     def PrintResults(self):
         for key in self.keys:
@@ -73,7 +88,7 @@ class ParsePlugin(object):
    
         print "Counted", len(self.data), "lines."
         print "Matched", self.matched, "lines."
-    
+     
     
     def ParseLog(self):
         f = open(self.options.logfile, 'r')   #REPLACE WITH ARGS 
@@ -82,6 +97,7 @@ class ParsePlugin(object):
         self.matched = 0
         for line in self.data:
             for rule in self.regexps.iterkeys():
+                 
                 rulename = rule
                 regexp = self.get_entry(self.plugincfg, rule, 'regexp')
                 if regexp is "":
@@ -120,12 +136,65 @@ class ParsePlugin(object):
                 self.matched += 1
                 break
     
+    def ParseRegex(self,regex):
+        f = open(self.options.logfile, 'r')   #REPLACE WITH ARGS 
+        self.data = f.readlines()
+        self.line_match = 0    
+        self.matched = 0
+        for line in self.data:
+            for rule in self.regexps:                 
+                rulename = rule
+                regexp = rule
+                if regexp is "":
+                    continue
+                # Replace vars
+                for alias in self.aliases:
+                    tmp_al = ""
+                    tmp_al = "\\" + alias;
+                    regexp = regexp.replace(tmp_al,ParsePlugin.aliases[alias])
+                result = re.findall(regexp,line)
+                try:
+                    tmp = result[0]
+                except IndexError:
+                    if self.options.verbose > 2:
+                        print "Not matched", line
+                    continue
+                # Matched
+                if self.options.quiet is False:
+                    print "Matched using %s" % rulename
+                if self.options.verbose > 0:
+                    print line
+                if self.options.verbose > 2:
+                    print regexp
+                    print line
+                try:
+                    if self.options.column > 0:  #Change this to print positional
+                        print "Match $%d: %s" % (int(sys.argv[3]),tmp[int(sys.argv[3])-1])
+                    else:
+                        if self.options.quiet == False:
+                            print result
+                except ValueError:
+                    if self.options.quiet is False:
+                        print result
+                # Do not match more rules for this line
+                self.rule_stats.append(str(rulename))
+                self.matched += 1
+                break
+    
+    
+    def ParseLogWithPlugin(self):
+        '''Process a logfile according to SID entries in an OSSIM collector plugin'''
+        pass
+    
+    def ParseLogWithRegex(self):
+        '''Process a logfile according to Regular Expressions in a text file'''
+        pass
         
     def __init__(self,args,logfile):
         self.options = args
-        if self.options.plugin == True: self.LoadPlugin()
-        
-        
-        # load Ossim config if appropriate
-        # ParsePluginSIDS()
-        #pass
+        if self.options.plugin == True: 
+            self.LoadPlugin()
+        else:
+            self.LoadRegexps()
+
+                
