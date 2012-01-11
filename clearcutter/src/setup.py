@@ -12,6 +12,6 @@ setup(name='clearcutter',
       author_email='conrad@alienvault.com',
       url = 'http://code.google.com/p/alienvault-labs-garage/',
       packages = ['clearcutter'],
-      scripts=['clearcutter.py'],
+      scripts=['clear-cutter'],
       cmdclass = { "build" : build_extra.build_extra}
       )
