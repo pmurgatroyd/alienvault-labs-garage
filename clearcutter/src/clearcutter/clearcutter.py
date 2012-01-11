@@ -11,7 +11,8 @@ __license__ = "GPL"
 __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
-import sys,os,argparse,clusters,ccregex,progressbar
+import sys,os,argparse
+from clearcutter import identify,parse,profile,sequence,progressbar
 
 
 class LogFile(object):
@@ -62,7 +63,7 @@ def DoLogExtract(args):
         print "File: " + log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
         sys.exit()
     if args.v > 0 : print "Processing Log File "  + log.Filename + ":" + str(log.Length) + " bytes" 
-    myclusters = clusters.ClusterGroup()
+    myclusters = identify.ClusterGroup()
     logline = log.RetrieveCurrentLine() 
     widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
     if args.q != True : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
@@ -82,7 +83,7 @@ def DoLogParse(args):
     except IOError:
         print "File: " + log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
         sys.exit()
-    myregexps = ccregex.ParsePlugin(args)
+    myregexps = parse.ParsePlugin(args)
     myregexps.Parse()
     #import logregex
     #process log from plugin
