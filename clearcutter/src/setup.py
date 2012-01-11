@@ -10,10 +10,8 @@ setup(name='clearcutter',
       description='ClearCutter Log Event Processor',
       author='Conrad Constantine',
       author_email='conrad@alienvault.com',
-      url = 'http://http://code.google.com/p/alienvault-labs-garage/',
-      py_modules = ['clusters','progressbar','ccprofiler','ccui','sequences','ccregex'],
-      scripts=[
-               'clearcutter.py'
-               ],
+      url = 'http://code.google.com/p/alienvault-labs-garage/',
+      packages = ['clearcutter'],
+      scripts=['clearcutter.py'],
       cmdclass = { "build" : build_extra.build_extra}
       )

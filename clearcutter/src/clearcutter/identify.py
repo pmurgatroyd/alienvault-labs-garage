@@ -7,6 +7,7 @@ from any given log data sample and assist in the creation of Regular Expression 
 #TODO: More Regexp Patterns
 #TODO: Quoted Text Grouping
 #TODO: During Nephew Check, compare against the ones with the most children first (more likely to find a match)
+#TODO: Fix the results printing for proper recursion
 
 import re
 
@@ -107,6 +108,8 @@ class ClusterGroup(object):
     """
     A Group of word rootcluster
     """
+    
+    args = ""
 
     rootNode = ClusterNode(NodeContent="ROOTNODE")
         
@@ -160,6 +163,9 @@ class ClusterGroup(object):
         
     
     def Results(self):
+        
+        #if self.args.output != '' : write output file
+        
         print "\n========== Potential Unique Log Events ==========\n"
         for node1 in self.rootNode.Children:
             for node2 in node1.Children:

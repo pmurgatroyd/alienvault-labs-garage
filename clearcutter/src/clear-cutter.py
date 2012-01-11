@@ -12,8 +12,7 @@ __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
 import sys,os,argparse
-from clearcutter import identify,parse,profile,sequence,progressbar
-
+import clearcutter 
 
 class LogFile(object):
     '''
@@ -63,10 +62,10 @@ def DoLogExtract(args):
         print "File: " + log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
         sys.exit()
     if args.v > 0 : print "Processing Log File "  + log.Filename + ":" + str(log.Length) + " bytes" 
-    myclusters = identify.ClusterGroup()
+    myclusters = clearcutter.identify.ClusterGroup()
     logline = log.RetrieveCurrentLine() 
-    widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
-    if args.q != True : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
+    widgets = ['Processing potential messages: ', clearcutter.progressbar.Percentage(), ' ', clearcutter.progressbar.Bar(marker=clearcutter.progressbar.RotatingMarker()),' ', clearcutter.progressbar.ETA()]
+    if args.q != True : pbar = clearcutter.progressbar.ProgressBar(widgets=widgets, maxval=100).start()
     while logline != "": #TODO: Make this actually exit on EOF
         myclusters.IsMatch(logline)
         if args.q != True : pbar.update((1.0 * log.Position / log.Length) * 100)
@@ -83,7 +82,7 @@ def DoLogParse(args):
     except IOError:
         print "File: " + log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
         sys.exit()
-    myregexps = parse.ParsePlugin(args)
+    myregexps = clearcutter.parse.ParsePlugin(args)
     myregexps.Parse()
     #import logregex
     #process log from plugin
