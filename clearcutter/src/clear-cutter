@@ -84,6 +84,7 @@ def DoLogParse(args):
         sys.exit()
     myregexps = plugparse.ParsePlugin(args,log)
     myregexps.ParseLog()
+    myregexps.PrintResults()
  
 def DoLogProfile():
     """Commence OSSIM SID Profiling"""
@@ -128,7 +129,8 @@ def ParseArgs():
     pluginparser.add_argument(dest='regexps', action='store', type=str,help='File containing list of Regular expressions')
     pluginparser.add_argument(dest='logfile', metavar='logfile', action='store', type=str, help='log file to process')
     pluginparser.add_argument('-P','--plugin', action='store_true',help='Regexp file is an OSSIM plugin .cfg file')
-    pluginparser.add_argument('-n','--nomatch', action='store', type=int, help='Show Matching values from position N')    
+    pluginparser.add_argument('-n','--nomatch', action='store_true',  help='Show lines that are not matched by regexes')    
+    pluginparser.add_argument('-c','--column', action='store', type=int, help='Show Matching values from position N')        
     pluginparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')
     pluginparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
     pluginparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
@@ -141,6 +143,7 @@ def ParseArgs():
     profileparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')
     profileparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
     profileparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
+    
     
     globalargs = parser.parse_args()
     mode[globalargs.mode](globalargs)

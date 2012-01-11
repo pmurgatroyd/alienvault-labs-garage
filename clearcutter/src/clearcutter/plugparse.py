@@ -19,6 +19,10 @@ class ParsePlugin(object):
     #extracted regexps from file
     regexps = {}
 
+    keys = {}
+    
+    data = ''
+    
     sorted_ = {}
     rule_stats = []
     line_match = 0
@@ -60,8 +64,8 @@ class ParsePlugin(object):
         for section in self.plugincfg.sections():
             if section.lower() not in SECTIONS_NOT_RULES :
                 self.regexps[section] = self.hitems(self.plugincfg,section)
-        keys = self.regexps.keys()
-        keys.sort()
+        self.keys = self.regexps.keys()
+        self.keys.sort()
 
     def PrintResults(self):
         for key in self.keys:
@@ -73,10 +77,10 @@ class ParsePlugin(object):
     
     def ParseLog(self):
         f = open(self.options.logfile, 'r')   #REPLACE WITH ARGS 
-        data = f.readlines()
+        self.data = f.readlines()
         self.line_match = 0    
-        matched = 0
-        for line in data:
+        self.matched = 0
+        for line in self.data:
             for rule in self.regexps.iterkeys():
                 rulename = rule
                 regexp = self.get_entry(self.plugincfg, rule, 'regexp')
@@ -91,29 +95,29 @@ class ParsePlugin(object):
                 try:
                     tmp = result[0]
                 except IndexError:
-                    if sys.argv[3] is "y":
+                    if self.options.verbose > 2:
                         print "Not matched", line
                     continue
                 # Matched
-                if sys.argv[3] is not "q":
+                if self.options.quiet is False:
                     print "Matched using %s" % rulename
-                if sys.argv[3] is "v":
+                if self.options.verbose > 0:
                     print line
-                if sys.argv[3] is "V":
+                if self.options.verbose > 2:
                     print regexp
                     print line
                 try:
-                    if int(sys.argv[3]) > 0:
+                    if self.options.column > 0:  #Change this to print positional
                         print "Match $%d: %s" % (int(sys.argv[3]),tmp[int(sys.argv[3])-1])
                     else:
-                        if sys.argv[3] is not "q":
+                        if self.options.quiet == False:
                             print result
                 except ValueError:
-                    if sys.argv[3] is not "q":
+                    if self.options.quiet is False:
                         print result
                 # Do not match more rules for this line
                 self.rule_stats.append(str(rulename))
-                matched += 1
+                self.matched += 1
                 break
     
         
