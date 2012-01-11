@@ -8,12 +8,22 @@ import sys,re
 import ConfigParser
 
 class ParsePlugin(object):
-    """Processes Log Data against an OSSIM collector plugin"""
+    """Processes Log Data against a list of regular expressions, possibly read from an OSSIM collector plugin"""
     
+    #Commandline Options
     options = ''
+    
+    #File containing regexps
     plugincfg = ''
+    
+    #extracted regexps from file
     regexps = {}
 
+    sorted_ = {}
+    rule_stats = []
+
+
+    #Common data patterns, as used in OSSIM
     aliases = {
                'IPV4' :"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
                'IPV6_MAP' : "::ffff:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
@@ -25,12 +35,12 @@ class ParsePlugin(object):
                'SYSLOG_WY_DATE' : "\w+\s+\d{1,2}\s\d{4}\s\d\d:\d\d:\d\d",
               }
 
-
+    #Hash config items
     def hitems(self,config, section):
-        hash = {}
+        itemhash = {}
         for item in config.items(section):
             hash[item[0]] = self._strip_value(item[1])
-        return hash
+        return itemhash
     
     def _strip_value(self,value):
         from string import strip
@@ -41,52 +51,47 @@ class ParsePlugin(object):
         value = self._strip_value(value)
         return value
 
-  
-
-    def Parse(self,logfile):
-
-        f = open(self.options.filename, 'r')   #REPLACE WITH ARGS 
-        data = f.readlines()
-        cfg_file=self.options.cfgfile
-        line_match = 0    
-        matched = 0
-    
+   
 
     def LoadPlugin(self):
         SECTIONS_NOT_RULES = ["config", "info", "translation"]
-        rules = {}
-        sorted_rules = {}
-        rule_stats = []
+
 
         config = ConfigParser.RawConfigParser()
         config.read(self.options.regexp)
         for section in config.sections():
             if section.lower() not in SECTIONS_NOT_RULES :
-                rules[section] = self.hitems(config,section)
-        keys = rules.keys()
+                self.regexps[section] = self.hitems(config,section)
+        keys = self.regexps.keys()
         keys.sort()
                 
 
     def PrintResults(self):
-        for key in keys:
-            print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times" % (str(key), rule_stats.count(str(key)))
+        for key in self.keys:
+            print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times" % (str(key), self.rule_stats.count(str(key)))
    
-        print "Counted", len(data), "lines."
-        print "Matched", matched, "lines."
+        print "Counted", len(self.data), "lines."
+        print "Matched", self.matched, "lines."
     
     
     def ParseLog(self):
+        f = open(self.options.filename, 'r')   #REPLACE WITH ARGS 
+        data = f.readlines()
+        self.plugincfg=self.options.cfgfile
+        line_match = 0    
+        matched = 0
+        
         for line in self.data:
-            for rule in self.rules.iterkeys():
+            for rule in self.regexps.iterkeys():
                 rulename = rule
-                regexp = self.get_entry(plugincfg, rule, 'regexp')
+                regexp = self.get_entry(self.plugincfg, rule, 'regexp')
                 if regexp is "":
                     continue
                 # Replace vars
                 for alias in self.aliases:
                     tmp_al = ""
                     tmp_al = "\\" + alias;
-                    regexp = regexp.replace(tmp_al,aliases[alias])
+                    regexp = regexp.replace(tmp_al,ParsePlugin.aliases[alias])
                 result = re.findall(regexp,line)
                 try:
                     tmp = result[0]
@@ -112,12 +117,12 @@ class ParsePlugin(object):
                     if sys.argv[3] is not "q":
                         print result
                 # Do not match more rules for this line
-                rule_stats.append(str(rulename))
+                self.rule_stats.append(str(rulename))
                 matched += 1
                 break
     
         
-    def __init__(self,args):
+    def __init__(self,args,logfile):
         pass
         # parse args into options
         #Options[
@@ -135,4 +140,3 @@ class ParsePlugin(object):
         # load Ossim config if appropriate
         # ParsePluginSIDS()
         #pass
-         

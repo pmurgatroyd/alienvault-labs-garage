@@ -11,7 +11,7 @@ __license__ = "GPL"
 __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
-import sys,os,argparse,clusters,ccregex,progressbar,mmap
+import sys,os,argparse,clusters,ccregex,progressbar
 
 
 class LogFile(object):
