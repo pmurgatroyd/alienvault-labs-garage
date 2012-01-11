@@ -12,7 +12,7 @@ __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
 import sys,os,argparse
-import clearcutter 
+from clearcutter import identify,plugparse,profile,progressbar,sequence,ui
 
 class LogFile(object):
     '''
@@ -61,11 +61,11 @@ def DoLogExtract(args):
     except IOError:
         print "File: " + log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
         sys.exit()
-    if args.v > 0 : print "Processing Log File "  + log.Filename + ":" + str(log.Length) + " bytes" 
-    myclusters = clearcutter.identify.ClusterGroup()
+    #if args.v > 0 : print "Processing Log File "  + log.Filename + ":" + str(log.Length) + " bytes" 
+    myclusters = identify.ClusterGroup()
     logline = log.RetrieveCurrentLine() 
-    widgets = ['Processing potential messages: ', clearcutter.progressbar.Percentage(), ' ', clearcutter.progressbar.Bar(marker=clearcutter.progressbar.RotatingMarker()),' ', clearcutter.progressbar.ETA()]
-    if args.q != True : pbar = clearcutter.progressbar.ProgressBar(widgets=widgets, maxval=100).start()
+    widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
+    if args.q != True : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
     while logline != "": #TODO: Make this actually exit on EOF
         myclusters.IsMatch(logline)
         if args.q != True : pbar.update((1.0 * log.Position / log.Length) * 100)
@@ -82,13 +82,9 @@ def DoLogParse(args):
     except IOError:
         print "File: " + log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
         sys.exit()
-    myregexps = clearcutter.parse.ParsePlugin(args)
-    myregexps.Parse()
-    #import logregex
-    #process log from plugin
-    print "Not Yet Implemented"
-    sys.exit()
-
+    myregexps = plugparse.ParsePlugin(args,log)
+    myregexps.ParseLog()
+ 
 def DoLogProfile():
     """Commence OSSIM SID Profiling"""
     # Prep Profiling
@@ -129,7 +125,8 @@ def ParseArgs():
        
     pluginparser = modeparsers.add_parser('parse',help = 'Parse regex list against logfile')
     pluginparser.set_defaults(mode='parse')
-    pluginparser.add_argument(dest='regexps', metavar='file', action='store', type=str,help='File containing list of Regular expressions')
+    pluginparser.add_argument(dest='regexps', action='store', type=str,help='File containing list of Regular expressions')
+    pluginparser.add_argument(dest='logfile', metavar='logfile', action='store', type=str, help='log file to process')
     pluginparser.add_argument('-P','--plugin', action='store_true',help='Regexp file is an OSSIM plugin .cfg file')
     pluginparser.add_argument('-n','--nomatch', action='store', type=int, help='Show Matching values from position N')    
     pluginparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')

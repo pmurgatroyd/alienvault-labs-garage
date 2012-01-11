@@ -21,7 +21,7 @@ class ParsePlugin(object):
 
     sorted_ = {}
     rule_stats = []
-
+    line_match = 0
 
     #Common data patterns, as used in OSSIM
     aliases = {
@@ -39,7 +39,7 @@ class ParsePlugin(object):
     def hitems(self,config, section):
         itemhash = {}
         for item in config.items(section):
-            hash[item[0]] = self._strip_value(item[1])
+            itemhash[item[0]] = self._strip_value(item[1])
         return itemhash
     
     def _strip_value(self,value):
@@ -52,19 +52,16 @@ class ParsePlugin(object):
         return value
 
    
-
     def LoadPlugin(self):
         SECTIONS_NOT_RULES = ["config", "info", "translation"]
 
-
-        config = ConfigParser.RawConfigParser()
-        config.read(self.options.regexp)
-        for section in config.sections():
+        self.plugincfg = ConfigParser.RawConfigParser()
+        self.plugincfg.read(self.options.regexps)
+        for section in self.plugincfg.sections():
             if section.lower() not in SECTIONS_NOT_RULES :
-                self.regexps[section] = self.hitems(config,section)
+                self.regexps[section] = self.hitems(self.plugincfg,section)
         keys = self.regexps.keys()
         keys.sort()
-                
 
     def PrintResults(self):
         for key in self.keys:
@@ -75,13 +72,11 @@ class ParsePlugin(object):
     
     
     def ParseLog(self):
-        f = open(self.options.filename, 'r')   #REPLACE WITH ARGS 
+        f = open(self.options.logfile, 'r')   #REPLACE WITH ARGS 
         data = f.readlines()
-        self.plugincfg=self.options.cfgfile
-        line_match = 0    
+        self.line_match = 0    
         matched = 0
-        
-        for line in self.data:
+        for line in data:
             for rule in self.regexps.iterkeys():
                 rulename = rule
                 regexp = self.get_entry(self.plugincfg, rule, 'regexp')
@@ -123,19 +118,9 @@ class ParsePlugin(object):
     
         
     def __init__(self,args,logfile):
-        pass
-        # parse args into options
-        #Options[
-        #Options[PluginCfg] = args.plugincfg
-        #Options['ParseFile']: False,
-        #Options['ParsePlugin']: False,
-        #Options['ParseSingleRegexp'] : False,
-        #Options['PrintMatching'] : False,
-        #Options['PrintNoMatching']: False,
-        #Options['ProfileSID'] : False,
-        #Options['ProfileLog'] : False,
-        #Options['PluginCFG'] : ""
-
+        self.options = args
+        if self.options.plugin == True: self.LoadPlugin()
+        
         
         # load Ossim config if appropriate
         # ParsePluginSIDS()
