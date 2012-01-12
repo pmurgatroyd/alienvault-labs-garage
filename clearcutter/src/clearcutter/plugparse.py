@@ -95,6 +95,12 @@ class ParsePlugin(object):
         self.data = f.readlines()
         self.line_match = 0    
         self.matched = 0
+        self.ParseLogWithPlugin()
+        
+    
+    
+    def ParseLogWithPlugin(self):
+        '''Process a logfile according to SID entries in an OSSIM collector plugin'''
         for line in self.data:
             for rule in self.regexps.iterkeys():
                  
@@ -135,56 +141,6 @@ class ParsePlugin(object):
                 self.rule_stats.append(str(rulename))
                 self.matched += 1
                 break
-    
-    def ParseRegex(self,regex):
-        f = open(self.options.logfile, 'r')   #REPLACE WITH ARGS 
-        self.data = f.readlines()
-        self.line_match = 0    
-        self.matched = 0
-        for line in self.data:
-            for rule in self.regexps:                 
-                rulename = rule
-                regexp = rule
-                if regexp is "":
-                    continue
-                # Replace vars
-                for alias in self.aliases:
-                    tmp_al = ""
-                    tmp_al = "\\" + alias;
-                    regexp = regexp.replace(tmp_al,ParsePlugin.aliases[alias])
-                result = re.findall(regexp,line)
-                try:
-                    tmp = result[0]
-                except IndexError:
-                    if self.options.verbose > 2:
-                        print "Not matched", line
-                    continue
-                # Matched
-                if self.options.quiet is False:
-                    print "Matched using %s" % rulename
-                if self.options.verbose > 0:
-                    print line
-                if self.options.verbose > 2:
-                    print regexp
-                    print line
-                try:
-                    if self.options.column > 0:  #Change this to print positional
-                        print "Match $%d: %s" % (int(sys.argv[3]),tmp[int(sys.argv[3])-1])
-                    else:
-                        if self.options.quiet == False:
-                            print result
-                except ValueError:
-                    if self.options.quiet is False:
-                        print result
-                # Do not match more rules for this line
-                self.rule_stats.append(str(rulename))
-                self.matched += 1
-                break
-    
-    
-    def ParseLogWithPlugin(self):
-        '''Process a logfile according to SID entries in an OSSIM collector plugin'''
-        pass
     
     def ParseLogWithRegex(self):
         '''Process a logfile according to Regular Expressions in a text file'''

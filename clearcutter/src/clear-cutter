@@ -12,7 +12,7 @@ __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
 import sys,os,argparse
-from clearcutter import identify,plugparse,profile,progressbar,sequence,ui
+from clearcutter import identify,plugparse,profiler,progressbar,sequence,ui
 
 class LogFile(object):
     '''
