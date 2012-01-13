@@ -65,13 +65,13 @@ def DoLogExtract(args):
     myclusters = identify.ClusterGroup()
     logline = log.RetrieveCurrentLine() 
     widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
-    if args.q != True : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
+    if args.quiet is False : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
     while logline != "": #TODO: Make this actually exit on EOF
         myclusters.IsMatch(logline)
-        if args.q != True : pbar.update((1.0 * log.Position / log.Length) * 100)
+        if args.quiet is False : pbar.update((1.0 * log.Position / log.Length) * 100)
         logline = log.RetrieveCurrentLine()
         
-    if args.q != True : pbar.finish()
+    if args.quiet is False : pbar.finish()
     myclusters.Results()
 
     
