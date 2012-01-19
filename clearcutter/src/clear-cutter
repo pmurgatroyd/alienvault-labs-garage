@@ -7,7 +7,7 @@ __email__ = "conrad@alienvault.com"
 __copyright__ = 'Copyright:Alienvault 2012'
 __credits__ = ["Conrad Constantine","Dominique Karg"]
 __version__ = "0.1"
-__license__ = "GPL"
+__license__ = "BSD"
 __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
@@ -86,9 +86,17 @@ def DoLogParse(args):
     myregexps.ParseLog()
     myregexps.PrintResults()
  
-def DoLogProfile():
+def DoLogProfile(args):
     """Commence OSSIM SID Profiling"""
     # Prep Profiling
+    # Do the regular logparse
+    # Process and print the results
+    print "Not Yet Implemented"
+    sys.exit()
+
+def DoLogSequence(args):
+    """Commence Log Behaviour Sequencing"""
+    # Prep Sequencing
     # Do the regular logparse
     # Process and print the results
     print "Not Yet Implemented"
@@ -97,7 +105,7 @@ def DoLogProfile():
 
 #=========================1
 #Map Arg Modes to Launch functions
-mode = {'identify' : DoLogExtract, 'parse' : DoLogParse, 'profile' : DoLogProfile} 
+mode = {'identify' : DoLogExtract, 'parse' : DoLogParse, 'profile' : DoLogProfile, 'sequence' : DoLogSequence} 
         
 def ParseArgs():
     parser = argparse.ArgumentParser(formatter_class = argparse.RawDescriptionHelpFormatter, \

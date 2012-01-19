@@ -90,7 +90,7 @@ class ClusterNode(object):
     
     VarThreshold = 10
     
-    def PrintPath(self):
+    def GeneratePath(self):
         currentNode = self
         parentpath = ""
         while currentNode.Content != "ROOTNODE":
@@ -99,7 +99,7 @@ class ClusterNode(object):
             else:
                 parentpath = currentNode.Content + " " + parentpath
             currentNode = currentNode.Parent
-        print parentpath
+        return parentpath
 
 
 
@@ -112,12 +112,12 @@ class ClusterGroup(object):
     args = ""
 
     rootNode = ClusterNode(NodeContent="ROOTNODE")
+    
+    entries = []
         
     def __init__(self):
         self.rootNode = ClusterNode(NodeContent="ROOTNODE")           
-                
-    
-                    
+                            
     def IsMatch(self,logline):  
         '''
         Test the incoming log line to see if it matches this clustergroup
@@ -144,14 +144,25 @@ class ClusterGroup(object):
 
 
     def IsEndNode(self,Node):
-        if (len(Node.Children) == 0): #I'm an EndNode       
-            Node.PrintPath()
-            return True
-        return False    
-
+        endnode = False
+        if (len(Node.Children) == 0): #I'm an EndNode for a log wording cluster    
+            #let's make sure our siblings are all endnodes too, and this is really var data
+            if Node.Parent is not None:
+                siblingChildCount = 0
+                for sibling in Node.Parent.Children:
+                    siblingChildCount += len(sibling.Children)
+                
+                if (siblingChildCount == 0) and (len(Node.Parent.Children) >= ClusterNode.VarThreshold):  #log event ends in a variable 
+                    endnode = True                       
+        
+        if endnode == True:
+            entry = Node.GeneratePath()
+            if entry not in self.entries: self.entries.append(entry)
+        
     def BuildResultsTree(self,node):
         '''Recurse through the Node Tree, identifying and printing complete log patterns'''
-        self.IsEndNode(node)
+        
+        if self.IsEndNode(node) == True : return None # no children so back up a level
         for childnode in node.Children:
             self.BuildResultsTree(childnode)
             
@@ -160,4 +171,5 @@ class ClusterGroup(object):
         #if options.outfile == true: dump to file 
         print "\n========== Potential Unique Log Events ==========\n"
         self.BuildResultsTree(self.rootNode)
-                
+        for entry in self.entries:
+            print entry
