@@ -148,53 +148,16 @@ class ClusterGroup(object):
             Node.PrintPath()
             return True
         return False    
-        
-        
-        #if (len(Node.Parent.Children) > 5) & (Node.Children == 0): #I have loads of siblings- I'm a variable at the end of a line       
-        #    Node.PrintPath()
-        #    return False
-        #if (len(Node.Parent.Children) > 5) & (Node.Children > 0): #lots of siblings, but I have more data
-        #    Node.PrintPath()
-        #    return False
-        #if (len(Node.Parent.Children) < 5) & (Node.Children == 0): #this is the end of a log line
-        #    Node.PrintPath()
-        #    return True       
-        #return True #Hey, I'm probably good
-        
-    
-    def Results(self):
-        
-        #if self.args.output != '' : write output file
-        
-        print "\n========== Potential Unique Log Events ==========\n"
-        for node1 in self.rootNode.Children:
-            for node2 in node1.Children:
-                if self.IsEndNode(node2)== True : break 
-                
-                for node3 in node2.Children:
-                    if self.IsEndNode(node3) == True : break 
-            
-                    for node4 in node3.Children:
-                        if self.IsEndNode(node4) == True : break 
-            
-                        for node5 in node4.Children:
-                            if self.IsEndNode(node5) == True : break 
-                            
-                            for node6 in node5.Children:
-                                if self.IsEndNode(node6) == True : break 
-            
-                                for node7 in node6.Children:
-                                    if self.IsEndNode(node7) == True : break 
-            
-                                    for node8 in node7.Children:
-                                        if self.IsEndNode(node8) == True : break 
-                
-                                        for node9 in node8.Children:
-                                            if self.IsEndNode(node9) == True : break 
-                    
-                                            for node10 in node9.Children:
-                                                if self.IsEndNode(node10) == True : break 
-                        
-                                                for node11 in node10.Children:
-                                                    if self.IsEndNode(node11) == True : break 
 
+    def BuildResultsTree(self,node):
+        '''Recurse through the Node Tree, identifying and printing complete log patterns'''
+        self.IsEndNode(node)
+        for childnode in node.Children:
+            self.BuildResultsTree(childnode)
+            
+    def Results(self):
+        '''Display all identified unique log event types'''
+        #if options.outfile == true: dump to file 
+        print "\n========== Potential Unique Log Events ==========\n"
+        self.BuildResultsTree(self.rootNode)
+                
