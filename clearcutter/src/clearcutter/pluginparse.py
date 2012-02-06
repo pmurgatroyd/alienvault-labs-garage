@@ -8,30 +8,30 @@
 #TODO: Identify plugin section that contains bad regexp
 #TODO: Implement precheck
 
-import sys,re
-import ConfigParser
+import sys,re,ConfigParser
+from logfile import LogFile
 
 class ParsePlugin(object):
     """Processes Log Data against a list of regular expressions, possibly read from an OSSIM collector plugin"""
     
     #Commandline Options
-    options = ''
+    Args = ''
     
     #File containing regexps
-    plugincfg = ''
+    Plugin = ''
     
     #extracted regexps from file
     regexps = {}
 
-    keys = {}
+    SIDs = {}
     
-    data = ''
+    Log = ''
     
     sorted_ = {}
     rule_stats = []
     line_match = 0
 
-    #Common data patterns, as used in OSSIM
+    #Common Log patterns, as used in OSSIM
     aliases = {
                'IPV4' :"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
                'IPV6_MAP' : "::ffff:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
@@ -63,19 +63,19 @@ class ParsePlugin(object):
     def LoadPlugin(self):
         SECTIONS_NOT_RULES = ["config", "info", "translation"]
 
-        self.plugincfg = ConfigParser.RawConfigParser()
-        self.plugincfg.read(self.options.regexps)
-        for section in self.plugincfg.sections():
+        self.Plugin = ConfigParser.RawConfigParser()
+        self.Plugin.read(self.Args.regexps)
+        for section in self.Plugin.sections():
             if section.lower() not in SECTIONS_NOT_RULES :
-                if self.IsValidRegex(self.get_entry(self.plugincfg, section, 'regexp')):
-                    self.regexps[section] = self.hitems(self.plugincfg,section)
+                if self.IsValidRegex(self.get_entry(self.Plugin, section, 'regexp')):
+                    self.regexps[section] = self.hitems(self.Plugin,section)
 
-        self.keys = self.regexps.keys()
-        self.keys.sort()
+        self.SIDs = self.regexps.keys()
+        self.SIDs.sort()
 
 
     def LoadRegexps(self):
-        self.regexps = file(self.options.regexps,'r').readlines()
+        self.regexps = file(self.Args.regexps,'r').readlines()
 
     def IsValidRegex(self,regex):
         try:
@@ -87,19 +87,19 @@ class ParsePlugin(object):
             return False
 
     def PrintResults(self):
-        for key in self.keys:
+        for key in self.SIDs:
             print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times" % (str(key), self.rule_stats.count(str(key)))
    
-        print "Counted", len(self.data), "lines."
+        print "Counted", len(self.Log), "lines."
         print "Matched", self.matched, "lines."
      
     
     def ParseLog(self):
-        f = open(self.options.logfile, 'r')   #REPLACE WITH ARGS 
-        self.data = f.readlines()
+        f = open(self.Args.logfile, 'r')   #REPLACE WITH ARGS 
+        self.Log = f.readlines()
         self.line_match = 0    
         self.matched = 0
-        if self.options.plugin == True : 
+        if self.Args.plugin == True : 
             self.ParseLogWithPlugin()
         else:
             self.ParseLogWithList()
@@ -112,12 +112,10 @@ class ParsePlugin(object):
         '''Process a logfile according to SID entries in an OSSIM collector plugin'''
         keys = self.regexps.keys()
         keys.sort()
-	for line in self.data:
-                
+        for line in self.Log:
             for rule in keys:
-                 
                 rulename = rule
-                regexp = self.get_entry(self.plugincfg, rule, 'regexp')
+                regexp = self.get_entry(self.Plugin, rule, 'regexp')
                 if regexp is "":
                     continue
                 # Replace vars
@@ -129,25 +127,25 @@ class ParsePlugin(object):
                 try:
                     tmp = result[0]
                 except IndexError:
-                    if self.options.verbose > 2:
+                    if self.Args.verbose > 2:
                         print "Not matched", line
                     continue
                 # Matched
-                if self.options.quiet is False:
+                if self.Args.quiet is False:
                     print "Matched using %s" % rulename
-                if self.options.verbose > 0:
+                if self.Args.verbose > 0:
                     print line
-                if self.options.verbose > 2:
+                if self.Args.verbose > 2:
                     print regexp
                     print line
                 try:
-                    if self.options.column > 0:  #Change this to print positional
+                    if self.Args.column > 0:  #Change this to print positional
                         print "Match $%d: %s" % (int(sys.argv[3]),tmp[int(sys.argv[3])-1])
                     else:
-                        if self.options.quiet == False:
+                        if self.Args.quiet == False:
                             print result
                 except ValueError:
-                    if self.options.quiet is False:
+                    if self.Args.quiet is False:
                         print result
                 # Do not match more rules for this line
                 self.rule_stats.append(str(rulename))
@@ -158,9 +156,9 @@ class ParsePlugin(object):
         '''Process a logfile according to Regular Expressions in a text file'''
         pass
         
-    def __init__(self,args,logfile):
-        self.options = args
-        if self.options.plugin == True: 
+    def __init__(self,args):
+        self.Args = args
+        if self.Args.plugin == True: 
             self.LoadPlugin()
         else:
             self.LoadRegexps()
