@@ -4,11 +4,11 @@ from any given log data sample and assist in the creation of Regular Expression 
 """
 
 #TODO: More Regexp Patterns
-#TODO: Quoted Text Grouping
-#TODO: When parsing log lines, mark the last word as endnode, to get permutations of log entries
 
+#TODO: Levenshtein distance grouping (recurse window groupings
 
-import re
+import re,progressbar
+from logfile import LogFile
 
 
 class ClusterNode(object):
@@ -20,11 +20,12 @@ class ClusterNode(object):
     Content = ""
     Parent = None
     ContentHash = ""
-
+    
+    
     def __init__(self,NodeContent="Not Provided"):
         self.Children = []
         self.Content = NodeContent
-        #print "Created new Node " + str(id(self)) + " with content : " + self.Content      
+        #if verbose > 3 : print "Created new Node " + str(id(self)) + " with content : " + self.Content      
         self.ContentHash = hash(NodeContent)
     
 
@@ -68,13 +69,13 @@ class ClusterNode(object):
         return ChildContent
     
 
-    VarThreshold = 10  #How many siblings a string node must have before it is considered to be variable data
     
     def GeneratePath(self):
+        #TODO: Compare siblings against regexps to suggest a regex replacement
         currentNode = self
         parentpath = ""
         while currentNode.Content != "ROOTNODE":
-            if len(currentNode.Parent.Children) > self.VarThreshold:
+            if len(currentNode.Parent.Children) > ClusterGroup.VarThreshold:
                 parentpath = "[VARIABLE]" + " " + parentpath
             else:
                 parentpath = currentNode.Content + " " + parentpath
@@ -84,8 +85,15 @@ class ClusterNode(object):
 class ClusterGroup(object):
         """
         A Group of word cluster, representing the unique log types within a logfile
-        """
-
+        """ 
+        
+        Args = ""
+        Log = ""
+        VarThreshold = 10  #How many siblings a string node must have before it is considered to be variable data
+        rootNode = ClusterNode(NodeContent="ROOTNODE")
+        entries = []
+      
+        
         def FindCommonRegex(self,teststring):
                 """
                 Test the string against a list of regexs for common data types, and return a placeholder for that datatype if found
@@ -111,13 +119,10 @@ class ClusterGroup(object):
                         returnstring = p.sub(regmap,returnstring)
                 return returnstring
                                                 
-        args = ""
-        rootNode = ClusterNode(NodeContent="ROOTNODE")
-        entries = []
-
-        def __init__(self):
+        
+        def __init__(self,args):
                 self.rootNode = ClusterNode(NodeContent="ROOTNODE")           
-
+                self.Args = args
 
         def IsMatch(self,logline):  
                 '''
@@ -153,7 +158,7 @@ class ClusterGroup(object):
                                 for sibling in Node.Parent.Children:
                                         if len(sibling.Children) > 0 : 
                                                 hasNephews = True 
-                                if (hasNephews is False) and (len(Node.Parent.Children) >= ClusterNode.VarThreshold):  #log event ends in a variable 
+                                if (hasNephews is False) and (len(Node.Parent.Children) >= ClusterGroup.VarThreshold):  #log event ends in a variable 
                                         endnode = True
                                 if (hasNephews is False) and (len(Node.Parent.Children)  == 1) : #log event ends in a fixed string
                                         endnode = True
@@ -178,3 +183,21 @@ class ClusterGroup(object):
                 for entry in self.entries:
                         print entry
 
+        def Run(self):
+                try:
+                    self.Log = LogFile(self.Args.logfile)
+                except IOError:
+                    print "File: " + self.Log.Filename + " cannot be opened : " + str(sys.exc_info()[1])
+                    #TODO: log to stderr
+                    raise IOError()
+                #if args.v > 0 : print "Processing Log File "  + log.Filename + ":" + str(log.Length) + " bytes" 
+                logline = self.Log.RetrieveCurrentLine() 
+                widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
+                if self.Args.quiet is False : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
+                while logline != "": #TODO: Make this actually exit on EOF
+                    self.IsMatch(logline)
+                    if self.Args.quiet is False : pbar.update((1.0 * self.Log.Position / self.Log.Length) * 100)
+                    logline = self.Log.RetrieveCurrentLine()
+                    
+                if self.Args.quiet is False : pbar.finish()
+            

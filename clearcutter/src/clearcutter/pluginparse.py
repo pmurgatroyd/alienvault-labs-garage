@@ -1,8 +1,12 @@
 # 2008 DK @ ossim
 # 2010/06 DK @ ossim: add .cfg support
 # 2012/01 CP @ ossim: ported to Clearcutter, added profiling support
-# TODO: Match rules from .cfg in the same order as the Agent does
+
 # Please, check regexp.txt to see an example
+
+#TODO: duplicate entire plugin parsing to validate good plugin file and field assignment
+#TODO: Identify plugin section that contains bad regexp
+#TODO: Implement precheck
 
 import sys,re
 import ConfigParser
@@ -95,14 +99,22 @@ class ParsePlugin(object):
         self.data = f.readlines()
         self.line_match = 0    
         self.matched = 0
-        self.ParseLogWithPlugin()
-        
+        if self.options.plugin == True : 
+            self.ParseLogWithPlugin()
+        else:
+            self.ParseLogWithList()
     
+    def ParseLogWithList(self):
+        print "Not Implemented - use Plugin Mode"
+        sys.exit()
     
     def ParseLogWithPlugin(self):
         '''Process a logfile according to SID entries in an OSSIM collector plugin'''
-        for line in self.data:
-            for rule in self.regexps.iterkeys():
+        keys = self.regexps.keys()
+        keys.sort()
+	for line in self.data:
+                
+            for rule in keys:
                  
                 rulename = rule
                 regexp = self.get_entry(self.plugincfg, rule, 'regexp')
