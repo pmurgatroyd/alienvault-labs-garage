@@ -1,3 +1,15 @@
+'''GTK User Interface code for ClearCutter'''
+
+__author__ = "CP Constantine"
+__email__ = "conrad@alienvault.com"
+__copyright__ = 'Copyright:Alienvault 2012'
+__credits__ = ["Conrad Constantine"]
+__version__ = "0.1"
+__license__ = "BSD"
+__status__ = "Prototype"
+__maintainer__ = "CP Constantine"
+
+
 import gtk,gtk.glade,pygtk
 
 class ClearCutterUI:

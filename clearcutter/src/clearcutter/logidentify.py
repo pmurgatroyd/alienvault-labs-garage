@@ -3,11 +3,25 @@ Clusters Locate clusters of test in Logfiles, to assist in processing discrete l
 from any given log data sample and assist in the creation of Regular Expression to parse those log entries
 """
 
+__author__ = "CP Constantine"
+__email__ = "conrad@alienvault.com"
+__copyright__ = 'Copyright:Alienvault 2012'
+__credits__ = ["Conrad Constantine"]
+__version__ = "0.1"
+__license__ = "BSD"
+__status__ = "Prototype"
+__maintainer__ = "CP Constantine"
+
+
 #TODO: More Regexp Patterns
 
 #TODO: Levenshtein distance grouping (recurse window groupings
 
-import progressbar,commonvars
+#TODO: Extract all unique words from a file
+#cat comment_file.txt | tr " " "\n" | sort | uniq -c
+
+
+import sys,progressbar,commonvars,levenshtein, plugingenerate
 from logfile import LogFile
 
 
@@ -68,8 +82,6 @@ class ClusterNode(object):
         self.Children.append(ChildContent)
         return ChildContent
     
-
-    
     def GeneratePath(self):
         #TODO: Compare siblings against regexps to suggest a regex replacement
         currentNode = self
@@ -90,6 +102,7 @@ class ClusterGroup(object):
         Args = ""
         Log = ""
         VarThreshold = 10  #How many siblings a string node must have before it is considered to be variable data
+        VarDistance = 20
         rootNode = ClusterNode(NodeContent="ROOTNODE")
         entries = []
              
@@ -153,9 +166,17 @@ class ClusterGroup(object):
                 #if options.outfile == true: dump to file 
                 print "\n========== Potential Unique Log Events ==========\n"
                 self.BuildResultsTree(self.rootNode)
+                                    
+                #Todo - commandline args to toggle levenshtein identification of dupes
+                
+                previous = ''          
                 for entry in self.entries:
+                    if levenshtein.levenshtein(entry,previous) < ClusterGroup.VarDistance : 
+                        print ">>>>" + entry
+                    else:
                         print entry
-
+                    previous = entry
+                
         def Run(self):
                 try:
                     self.Log = LogFile(self.Args.logfile)
@@ -173,6 +194,10 @@ class ClusterGroup(object):
                     logline = self.Log.RetrieveCurrentLine()
                     
                 if self.Args.quiet is False : pbar.finish()
+        
+        def GenPlugin(self):
+            generator = plugingenerate.Generator(self.entries)
+            generator.WritePlugin()
             
 #Take EndNode Strings
 #Calculate Levenshtein distance between them

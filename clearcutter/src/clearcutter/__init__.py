@@ -3,7 +3,7 @@
 __author__ = "CP Constantine"
 __email__ = "conrad@alienvault.com"
 __copyright__ = 'Copyright:Alienvault 2012'
-__credits__ = ["Conrad Constantine","Dominique Karg"]
+__credits__ = ["Conrad Constantine"]
 __version__ = "0.1"
 __license__ = "BSD"
 __status__ = "Prototype"

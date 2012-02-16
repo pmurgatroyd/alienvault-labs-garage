@@ -24,6 +24,7 @@ def DoLogExtract(args):
     identify = logidentify.ClusterGroup(args)
     identify.Run()
     identify.Results()
+    if args.generate is True : identify.GenPlugin()
     
 def DoLogParse(args):
     """Commence Plugin Parsing Mode"""
@@ -71,6 +72,8 @@ def ParseArgs():
     identifyparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
     identifyparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
     identifyparser.add_argument('-R','--regexp', action='store', type = str, metavar = 'regexp' , help='Display results in Regular expression format')
+    identifyparser.add_argument('-G','--generate', action='store_true', help='Generate a skeleton OSSIM plugin from the results')
+    
     
     
     sequenceparser = modeparsers.add_parser('sequence',help='identify sequences of log messages')
@@ -84,24 +87,24 @@ def ParseArgs():
        
     pluginparser = modeparsers.add_parser('parse',help = 'Parse regex list against logfile')
     pluginparser.set_defaults(mode='parse')
-    pluginparser.add_argument(dest='regexps', action='store', type=str,help='File containing list of Regular expressions')
+    pluginparser.add_argument(dest='plugin', action='store', type=str,help='File containing list of Regular expressions')
     pluginparser.add_argument(dest='logfile', metavar='logfile', action='store', type=str, help='log file to process')
-    pluginparser.add_argument('-P','--plugin', action='store_true',help='Regexp file is an OSSIM plugin .cfg file')
     pluginparser.add_argument('-n','--nomatch', action='store_true',  help='Show lines that are not matched by regexes')    
     pluginparser.add_argument('-c','--column', action='store', type=int, help='Show Matching values from position N')        
     pluginparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')
     pluginparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
-    pluginparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
+    pluginparser.add_argument('-o','--output', action='store', type = str , help='Write results to <file>')
+    pluginparser.add_argument('-l','--list', action='store_true', help='Plugin file is just a list of Regexes')
     
     
     profileparser = modeparsers.add_parser('profile',help = 'Profile performance of regex list against logile')
     profileparser.set_defaults(mode='profile')
-    profileparser.add_argument('plugin', action='store', type=str,help='OSSIM plugin .cfg file')
+    profileparser.add_argument(dest='plugin', action='store', type=str,help='OSSIM plugin .cfg file')
+    profileparser.add_argument(dest='logfile', metavar='logfile', action='store', type=str, help='log file to process')
     profileparser.add_argument('-s','--sort', action='store_true',help='Sort Results by Execution Time')
     profileparser.add_argument('-v','--verbose', action='count',help='verbose mode - use multiple times to increase verbosity')
     profileparser.add_argument('-q','--quiet', action='store_true',help='quiet mode - print nothing but results')
     profileparser.add_argument('-o','--output', action='store', type = str, metavar = 'file' , help='Write results to <file>')
-    
     
     globalargs = parser.parse_args()
     mode[globalargs.mode](globalargs)

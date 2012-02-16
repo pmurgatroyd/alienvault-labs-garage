@@ -1,14 +1,25 @@
-# 2008 DK @ ossim
-# 2010/06 DK @ ossim: add .cfg support
-# 2012/01 CP @ ossim: ported to Clearcutter, added profiling support
+'''OSSIM Plugin Test-Run parsing code
+Simulates loading a plugin into OSSIM and parsing sample log data.
 
-# Please, check regexp.txt to see an example
+For testing plugins before loading into OSSIM, and simulating the log parsing process and results
+
+'''
+
+__author__ = "CP Constantine"
+__email__ = "conrad@alienvault.com"
+__copyright__ = 'Copyright:Alienvault 2012'
+__credits__ = ["Conrad Constantine","Dominique Karg"]
+__version__ = "0.1"
+__license__ = "BSD"
+__status__ = "Prototype"
+__maintainer__ = "CP Constantine"
+
 
 #TODO: duplicate entire plugin parsing to validate good plugin file and field assignment
 #TODO: Identify plugin section that contains bad regexp
 #TODO: Implement precheck
 
-import sys,re,ConfigParser
+import sys,re,ConfigParser,plugingenerate
 from logfile import LogFile
 
 class ParsePlugin(object):
@@ -113,9 +124,9 @@ class ParsePlugin(object):
         keys = self.regexps.keys()
         keys.sort()
         for line in self.Log:
-            for rule in keys:
-                rulename = rule
-                regexp = self.get_entry(self.Plugin, rule, 'regexp')
+            matched = False
+            for rulename in keys:
+                regexp = self.get_entry(self.Plugin, rulename, 'regexp')
                 if regexp is "":
                     continue
                 # Replace vars
@@ -127,10 +138,9 @@ class ParsePlugin(object):
                 try:
                     tmp = result[0]
                 except IndexError:
-                    if self.Args.verbose > 2:
-                        print "Not matched", line
                     continue
                 # Matched
+                matched = True
                 if self.Args.quiet is False:
                     print "Matched using %s" % rulename
                 if self.Args.verbose > 0:
@@ -151,10 +161,12 @@ class ParsePlugin(object):
                 self.rule_stats.append(str(rulename))
                 self.matched += 1
                 break
-    
-    def ParseLogWithRegex(self):
-        '''Process a logfile according to Regular Expressions in a text file'''
-        pass
+            if matched is False and self.Args.nomatch is True:
+                print 'NOT MATCHED: ' + line
+            
+       
+
+        
         
     def __init__(self,args):
         self.Args = args
@@ -163,4 +175,6 @@ class ParsePlugin(object):
         else:
             self.LoadRegexps()
 
+    
+    
                 

@@ -1,0 +1,11 @@
+(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+connect\sfrom\s(?P<srchost>\IPV4)\s\[\S*\]
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+(?P<querytype>\S+)\squery\sfor\s\'(?P<user>[^\']+)\'\s\S+\sfrom\s(?P<srcaddr>\IPV4)\s(?P<action>\S+))
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+authorize_cmd:\suser=(?P<user>[^,]*),\scmd=(?P<cmdname>\S+))
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+cmd\s(?P<cmdname>\S*)\sdoes\snot\sexist,\s(?P<action>\S+)\sby\sdefault)
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+exec\sauthorization\srequest\sfor\s(?P<user>\S+))
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+login\sfailure:\s(?P<login>\S*)\s(?P<srchost>\S+)\s\((?P<srcaddr>[^\)]*)\)\s\S*$)
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+Version\s(?P<version>\S+)\sInitialized\s\d+)
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+session\.peerip\sis\s(?P<srcaddr>\IPV4))
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+Read\s-1\sbytes\sfrom\s(?P<srcaddr>\IPV4)\s\S+\,\sexpecting\s\d\d$)
+(?P<logline>(?P<date>\w{3}\s+\d{1,2}\s\d\d:\d\d:\d\d\s\d\d\d\d)\s+((?P<sensor>[a-zA-Z0-9\.]*))\[\d{1,5}\]:\s+user\s\'(?P<user>[^\']+)\'\sfound$)
+

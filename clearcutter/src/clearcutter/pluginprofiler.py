@@ -1,3 +1,19 @@
+'''Plugin Performance profiling module for ClearCutter
+
+Loads an OSSIM plugin and sample log data, and identifies the CPU cost for each SID in a plugin
+as a percentage of total runtime to process the entire file
+'''
+
+__author__ = "CP Constantine"
+__email__ = "conrad@alienvault.com"
+__copyright__ = 'Copyright:Alienvault 2012'
+__credits__ = ["Conrad Constantine"]
+__version__ = "0.1"
+__license__ = "BSD"
+__status__ = "Prototype"
+__maintainer__ = "CP Constantine"
+
+
 import cProfile,pstats,re
 
 logdata = ''

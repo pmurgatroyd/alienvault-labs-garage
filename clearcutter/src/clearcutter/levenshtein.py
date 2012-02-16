@@ -1,24 +1,14 @@
-'''
-Created on Feb 3, 2012
+'''Levenshtein Distance Calculator for Clearcutter log identification module'''
 
-@author: conrad
-'''
+__author__ = "CP Constantine"
+__email__ = "conrad@alienvault.com"
+__copyright__ = 'Copyright:Alienvault 2012'
+__credits__ = ["Conrad Constantine"]
+__version__ = "0.1"
+__license__ = "BSD"
+__status__ = "Prototype"
+__maintainer__ = "CP Constantine"
 
-
-## {{{ http://code.activestate.com/recipes/576874/ (r1)
-''' Calculates the Levenshtein distance of 2 strings'''
-
-def printMatrix(m):
-    print ' '
-    for line in m:
-        spTupel = ()
-        breite = len(line)
-        for column in line:
-            spTupel = spTupel + (column, )
-        print "%3i"*breite % spTupel
-
-s1 = raw_input('first word: ')
-s2 = raw_input('second word: ')
 
 def levenshtein(s1, s2):
     l1 = len(s1)
@@ -33,8 +23,5 @@ def levenshtein(s1, s2):
                 matrix[zz+1][sz+1] = min(matrix[zz+1][sz] + 1, matrix[zz][sz+1] + 1, matrix[zz][sz])
             else:
                 matrix[zz+1][sz+1] = min(matrix[zz+1][sz] + 1, matrix[zz][sz+1] + 1, matrix[zz][sz] + 1)
-    printMatrix(matrix)
     return matrix[l2][l1]
         
-distance = levenshtein(s1, s2)        
-print 'The Levenshtein-Distance of ',s1, ' and ', s2, ' is ', distance
