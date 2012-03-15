@@ -21,7 +21,7 @@ __maintainer__ = "CP Constantine"
 #cat comment_file.txt | tr " " "\n" | sort | uniq -c
 
 
-import sys,progressbar,commonvars,levenshtein, plugingenerate
+import sys, progressbar, commonvars, levenshtein, plugingenerate
 from logfile import LogFile
 
 

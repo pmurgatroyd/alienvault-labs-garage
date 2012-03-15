@@ -45,7 +45,9 @@ class Generator(object):
         outfile = open("testplugin.cfg","w")
         self.Plugin.write(outfile) 
 
-
+    def WriteSQL(self):
+        pass
+    
         
         
 

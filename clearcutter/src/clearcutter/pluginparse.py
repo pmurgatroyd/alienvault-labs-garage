@@ -17,10 +17,10 @@ __maintainer__ = "CP Constantine"
 
 #TODO: duplicate entire plugin parsing to validate good plugin file and field assignment
 #TODO: Identify plugin section that contains bad regexp
+
 #TODO: Implement precheck
 
-import sys,re,ConfigParser,plugingenerate
-from logfile import LogFile
+import sys,re,ConfigParser, pluginvalidate, commonvars
 
 class ParsePlugin(object):
     """Processes Log Data against a list of regular expressions, possibly read from an OSSIM collector plugin"""
@@ -32,7 +32,7 @@ class ParsePlugin(object):
     Plugin = ''
     
     #extracted regexps from file
-    regexps = {}
+    #regexps = {}
 
     SIDs = {}
     
@@ -40,6 +40,8 @@ class ParsePlugin(object):
     
     sorted_ = {}
     rule_stats = []
+    rule_precheck_stats = []
+    
     line_match = 0
 
     #Common Log patterns, as used in OSSIM
@@ -54,7 +56,10 @@ class ParsePlugin(object):
                'SYSLOG_WY_DATE' : "\w+\s+\d{1,2}\s\d{4}\s\d\d:\d\d:\d\d",
               }
 
-    #Hash config items
+    def __init__(self,args):
+        self.Args = args
+        self.LoadPlugin()
+        
     def hitems(self,config, section):
         itemhash = {}
         for item in config.items(section):
@@ -72,60 +77,38 @@ class ParsePlugin(object):
 
    
     def LoadPlugin(self):
-        SECTIONS_NOT_RULES = ["config", "info", "translation"]
-
-        self.Plugin = ConfigParser.RawConfigParser()
-        self.Plugin.read(self.Args.regexps)
-        for section in self.Plugin.sections():
-            if section.lower() not in SECTIONS_NOT_RULES :
-                if self.IsValidRegex(self.get_entry(self.Plugin, section, 'regexp')):
-                    self.regexps[section] = self.hitems(self.Plugin,section)
-
-        self.SIDs = self.regexps.keys()
-        self.SIDs.sort()
-
-
-    def LoadRegexps(self):
-        self.regexps = file(self.Args.regexps,'r').readlines()
-
-    def IsValidRegex(self,regex):
         try:
-            test = re.compile(regex, flags=0)
-            return True
-        except re.error:
-            sys.stderr.write("\033[91m Regular Expression : " + regex + " is not a valid regular expression \033[0m\n")
-            sys.stderr.flush()
-            return False
+            self.Plugin = ConfigParser.RawConfigParser()
+            self.Plugin.read(self.Args.plugin)
+        except ConfigParser.MissingSectionHeaderError:
+            print self.Args.plugin + " Is not an OSSIM plugin file"
+            sys.exit()
+        
+        for rule in self.Plugin.sections():
+            if rule.lower() not in commonvars.SECTIONS_NOT_RULES :
+                self.SIDs[rule] = self.Plugin.get(rule, 'regexp')
+        
+        validator = pluginvalidate.PluginValidator(self.Plugin)
+        if validator.IsValid() == False: sys.exit()
 
-    def PrintResults(self):
-        for key in self.SIDs:
-            print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times" % (str(key), self.rule_stats.count(str(key)))
-   
-        print "Counted", len(self.Log), "lines."
-        print "Matched", self.matched, "lines."
-     
-    
-    def ParseLog(self):
-        f = open(self.Args.logfile, 'r')   #REPLACE WITH ARGS 
-        self.Log = f.readlines()
-        self.line_match = 0    
-        self.matched = 0
-        if self.Args.plugin == True : 
-            self.ParseLogWithPlugin()
-        else:
-            self.ParseLogWithList()
-    
-    def ParseLogWithList(self):
-        print "Not Implemented - use Plugin Mode"
-        sys.exit()
     
     def ParseLogWithPlugin(self):
         '''Process a logfile according to SID entries in an OSSIM collector plugin'''
-        keys = self.regexps.keys()
+        keys = self.SIDs.keys()
         keys.sort()
         for line in self.Log:
             matched = False
             for rulename in keys:
+                #match the line with precheck first
+                if self.Args.precheck is True:
+                    try:
+                        precheck = self.get_entry(self.Plugin, rulename, 'precheck')
+                        if precheck in line:
+                            self.rule_precheck_stats.append(str(rulename))
+                    except ConfigParser.NoOptionError:
+                        pass
+                
+                
                 regexp = self.get_entry(self.Plugin, rulename, 'regexp')
                 if regexp is "":
                     continue
@@ -141,6 +124,7 @@ class ParsePlugin(object):
                     continue
                 # Matched
                 matched = True
+
                 if self.Args.quiet is False:
                     print "Matched using %s" % rulename
                 if self.Args.verbose > 0:
@@ -163,18 +147,26 @@ class ParsePlugin(object):
                 break
             if matched is False and self.Args.nomatch is True:
                 print 'NOT MATCHED: ' + line
-            
-       
-
-        
-        
-    def __init__(self,args):
-        self.Args = args
-        if self.Args.plugin == True: 
-            self.LoadPlugin()
-        else:
-            self.LoadRegexps()
 
     
+               
+
+    def Run(self):
+        f = open(self.Args.logfile, 'r')   #REPLACE WITH ARGS 
+        self.Log = f.readlines()
+        self.line_match = 0    
+        self.matched = 0
+        self.ParseLogWithPlugin()
+
+
+    def PrintResults(self):
+        for key in self.SIDs:
+            print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times by Regexp" % (str(key), self.rule_stats.count(str(key)))
+            if self.Args.precheck is True:
+                print "\t\t\t\t\t\tMatched %d times by Precheck" % ( self.rule_precheck_stats.count(str(key)))
+   
+        print "Counted", len(self.Log), "lines."
+        print "Matched", self.matched, "lines."
+     
     
                 

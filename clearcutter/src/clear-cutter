@@ -34,7 +34,7 @@ def DoLogParse(args):
         print "Installation Error - pluginparse.py not found"
         sys.exit()
     parse = pluginparse.ParsePlugin(args)
-    parse.ParseLog()
+    parse.Run()
     parse.PrintResults()
  
 def DoLogProfile(args):
@@ -95,7 +95,7 @@ def ParseArgs():
     pluginparser.add_argument('-v', '--verbose', action='count', help='verbose mode - use multiple times to increase verbosity')
     pluginparser.add_argument('-q', '--quiet', action='store_true', help='quiet mode - print nothing but results')
     pluginparser.add_argument('-o', '--output', action='store', type = str , help='Write results to <file>')
-    pluginparser.add_argument('-l', '--list', action='store_true', help='Plugin file is just a list of Regexes')
+    pluginparser.add_argument('-p', '--precheck', action='store_true' , help="Process the 'precheck' in the plugin" )
     
     
     profileparser = modeparsers.add_parser('profile', help = 'Profile performance of regex list against logfile')

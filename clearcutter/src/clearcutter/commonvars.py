@@ -16,6 +16,8 @@ __maintainer__ = "CP Constantine"
 
 import re
 
+SECTIONS_NOT_RULES = ["config", "info", "translation"]
+
 aliases = {
     '[IPV4]' :"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
     '[IPV6_MAP]' : "::ffff:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
@@ -34,6 +36,9 @@ aliases = {
     }
 
 DefaultDirectives = [
+        "regexp",
+        "precheck",
+        "event_type",
         "type",
         "date",
         "sensor",
