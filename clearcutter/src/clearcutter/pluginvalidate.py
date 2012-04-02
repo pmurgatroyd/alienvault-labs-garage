@@ -162,7 +162,9 @@ class PluginValidator(object):
     
     def PrintLabelUsage(self):
         print "\nThe Following Regex Labels are Assigned to UserData fields"
-        for udata in self._userlabels.keys():
+        udatafields = self._userlabels.keys()
+        udatafields.sort()
+        for udata in udatafields:
             udataresult = "\t" + udata + "\t" 
             for udataval in self._userlabels[udata]:
                 udataresult += str(udataval) + ", "
