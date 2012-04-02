@@ -103,7 +103,7 @@ class PluginValidator(object):
 
         self.CheckLabelValue(rule, option)
         #TODO: figure out embedded groupnames in strings
-        self.CheckUserConsistency()
+        self.CheckUserConsistency(rule, option)
 
                            
     def CheckRegexValue(self,section):
@@ -117,13 +117,13 @@ class PluginValidator(object):
             self._valid = False
             return False 
         
-    def CheckLabelValue(self, section, option):
+    def CheckLabelValue(self, rule, option):
         '''
         Validate that a a regex label used as an option value, exists in the regex
         '''
-        group = self._plugin.get(section,option)
+        group = self._plugin.get(rule,option)
         try:
-            testreg = self._plugin.get(section,'regexp')
+            testreg = self._plugin.get(rule,'regexp')
         except ConfigParser.NoOptionError:
             # user will have already been noted there is no such value
             return
@@ -135,13 +135,25 @@ class PluginValidator(object):
                 print "\tOption '" + option + "' refers to non-existant regexp group '" + group +"'"
                 self._valid = False            
     
+    def CheckDuplicateSID(self,sid):
+        '''
+        check that plugin_sid values are not duplicated
+        '''
+        if sid.startswith("{$"):   #can't vald
+            return
+        if sid in self._sids:
+            print "\tDuplicate plugin_sid value " + sid + " found"
+            self._valid = False
+        else:
+            self._sids.append(sid)
+
 
     def CheckUserConsistency(self, rule, option):
         '''
         Validate that a a regex label used as an option value, exists in the regex
         '''
-        if option.lowercase.startswith("userdata"):
-            if option in self._userlabels[option]:
+        if option.lower() in self._userlabels:
+            if self._plugin.get(rule, option) in self._userlabels[option]:
                 pass   #We've seen this one before
             else:
                 self._userlabels[option].append(self._plugin.get(rule,option))
@@ -149,6 +161,9 @@ class PluginValidator(object):
         
     
     def PrintLabelUsage(self):
-        print "The Following Regex Labels are Assigned to UserData fields":
-            for udata in self._userlabels.keys:
-                print udata + self._userlabels[udata]
+        print "\nThe Following Regex Labels are Assigned to UserData fields"
+        for udata in self._userlabels.keys():
+            udataresult = "\t" + udata + "\t" 
+            for udataval in self._userlabels[udata]:
+                udataresult += str(udataval) + ", "
+            print udataresult
