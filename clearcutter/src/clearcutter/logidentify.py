@@ -14,7 +14,6 @@ __maintainer__ = "CP Constantine"
 
 
 #TODO: More Regexp Patterns
-
 #TODO: Levenshtein distance grouping (recurse window groupings
 
 #TODO: Extract all unique words from a file
@@ -172,7 +171,7 @@ class ClusterGroup(object):
                 previous = ''          
                 for entry in self.entries:
                     if levenshtein.levenshtein(entry,previous) < ClusterGroup.VarDistance : 
-                        print ">>>>" + entry
+                        print "\t" + entry
                     else:
                         print entry
                     previous = entry
