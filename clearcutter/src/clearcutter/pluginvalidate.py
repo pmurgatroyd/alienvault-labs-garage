@@ -1,12 +1,14 @@
 '''
 Validates that an OSSIM plugin contains no syntactic errors
+
+Displays information helpful to creating an internally-consistent plugin
 '''
 
 __author__ = "CP Constantine"
 __email__ = "conrad@alienvault.com"
 __copyright__ = 'Copyright:Alienvault 2012'
 __credits__ = ["Conrad Constantine","Dominique Karg"]
-__version__ = "0.1"
+__version__ = "0.2"
 __license__ = "BSD"
 __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
@@ -14,6 +16,9 @@ __maintainer__ = "CP Constantine"
 import ConfigParser,commonvars,re,sys
 
 class PluginValidator(object):
+    """
+    Locates common errors within an OSSIM plugin
+    """
     
     _plugin = ""
     _valid = True
@@ -107,6 +112,9 @@ class PluginValidator(object):
 
                            
     def CheckRegexValue(self,section):
+        """
+        Validate that the Regex directive contains a properly-formed Regular Expression
+        """
         regex = self._plugin.get(section,'regexp')
         try:
             re.compile(regex, flags=0)
@@ -119,7 +127,7 @@ class PluginValidator(object):
         
     def CheckLabelValue(self, rule, option):
         '''
-        Validate that a a regex label used as an option value, exists in the regex
+        Validate that a a regex group used as an directive value, exists in the regex directive
         '''
         group = self._plugin.get(rule,option)
         try:
@@ -150,7 +158,7 @@ class PluginValidator(object):
 
     def CheckUserConsistency(self, rule, option):
         '''
-        Validate that a a regex label used as an option value, exists in the regex
+        Collate the Regexp labels used in each UserData field to expose inconsistency to the user
         '''
         if option.lower() in self._userlabels:
             if self._plugin.get(rule, option) in self._userlabels[option]:
