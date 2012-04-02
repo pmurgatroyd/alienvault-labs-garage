@@ -18,6 +18,17 @@ class PluginValidator(object):
     _plugin = ""
     _valid = True
     _sids = []
+    _userlabels = {
+                   "userdata1" : [],
+                   "userdata2" : [],
+                   "userdata3" : [],
+                   "userdata4" : [],
+                   "userdata5" : [],
+                   "userdata6" : [],
+                   "userdata7" : [],
+                   "userdata8" : [],
+                   "userdata9" : []
+                   }
 
     SECTIONS_NOT_RULES = ["config", "info", "translation"]
     ESSENTIAL_OPTIONS = ['regexp', 'event_type','plugin_sid']
@@ -30,6 +41,8 @@ class PluginValidator(object):
         '''Process a plugin .cfg as the OSSIM agent would, noting any malformed or missing directives'''
         
         self.CheckSections()
+        self.PrintLabelUsage()
+        
         if self._valid is False: print "\nErrors detected in OSSIM Plugin file\n"
         return self._valid 
         # load each SID section
@@ -89,7 +102,8 @@ class PluginValidator(object):
             self._valid = False
 
         self.CheckLabelValue(rule, option)
-        #figure out embedded groupnames in strings
+        #TODO: figure out embedded groupnames in strings
+        self.CheckUserConsistency()
 
                            
     def CheckRegexValue(self,section):
@@ -121,18 +135,20 @@ class PluginValidator(object):
                 print "\tOption '" + option + "' refers to non-existant regexp group '" + group +"'"
                 self._valid = False            
     
-    def CheckDuplicateSID(self,sid):
+
+    def CheckUserConsistency(self, rule, option):
         '''
-        check that plugin_sid values are not duplicated
+        Validate that a a regex label used as an option value, exists in the regex
         '''
-        if sid.startswith("{$"):   #can't vald
-            return
-        if sid in self._sids:
-            print "\tDuplicate plugin_sid value " + sid + " found"
-            self._valid = False
-        else:
-            self._sids.append(sid)
+        if option.lowercase.startswith("userdata"):
+            if option in self._userlabels[option]:
+                pass   #We've seen this one before
+            else:
+                self._userlabels[option].append(self._plugin.get(rule,option))
         
         
     
-            
+    def PrintLabelUsage(self):
+        print "The Following Regex Labels are Assigned to UserData fields":
+            for udata in self._userlabels.keys:
+                print udata + self._userlabels[udata]
