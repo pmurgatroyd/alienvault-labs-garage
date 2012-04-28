@@ -6,7 +6,7 @@ import os
 from DistUtilsExtra.command import *
 
 setup(name='clearcutter',
-      version='0.1',
+      version='0.2',
       description='ClearCutter Log Event Processor',
       author='Conrad Constantine',
       author_email='conrad@alienvault.com',
@@ -15,3 +15,5 @@ setup(name='clearcutter',
       scripts=['clear-cutter'],
       cmdclass = { "build" : build_extra.build_extra}
       )
+
+#TODO: easy_install argparse

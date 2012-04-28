@@ -19,6 +19,8 @@ __maintainer__ = "CP Constantine"
 #TODO: Extract all unique words from a file
 #cat comment_file.txt | tr " " "\n" | sort | uniq -c
 
+#TODO: Print total matches for each identified log entry.
+
 
 import sys, progressbar, commonvars, levenshtein, plugingenerate
 from logfile import LogFile

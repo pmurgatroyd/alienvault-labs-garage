@@ -132,15 +132,16 @@ class ParsePlugin(object):
                 if self.Args.verbose > 2:
                     print regexp
                     print line
-                try:
-                    if self.Args.column > 0:  #Change this to print positional
-                        print "Match $%d: %s" % (int(sys.argv[3]),tmp[int(sys.argv[3])-1])
-                    else:
-                        if self.Args.quiet == False:
-                            print result
-                except ValueError:
-                    if self.Args.quiet is False:
-                        print result
+                #TODO: Implement label Extraction
+                #try:
+                #    if self.Args.group != '':  #Change this to print positional
+                #        print "Match $%d: %s" % (int(sys.argv[3]),tmp[int(sys.argv[3])-1])
+                #    else:
+                #        if self.Args.quiet == False:
+                #            print result
+                #except ValueError:
+                #    if self.Args.quiet is False:
+                #        print result
                 # Do not match more rules for this line
                 self.rule_stats.append(str(rulename))
                 self.matched += 1

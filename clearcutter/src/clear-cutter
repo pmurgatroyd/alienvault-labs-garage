@@ -104,6 +104,7 @@ def ParseArgs():
     pluginparser.add_argument('-q', '--quiet', action='store_true', help='quiet mode - print nothing but results')
     pluginparser.add_argument('-o', '--output', action='store', type = str , help='Write results to <file>')
     pluginparser.add_argument('-p', '--precheck', action='store_true' , help="Process the 'precheck' directve during parsing" )
+    pluginparser.add_argument('-f', '--force', action='store_true' , help="Ignore plugin errors and attempt to parse anyway" )
     
     
     profileparser = modeparsers.add_parser('profile', help = 'Profile performance of regex list against logfile')

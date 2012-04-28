@@ -18,6 +18,8 @@ import re
 
 SECTIONS_NOT_RULES = ["config", "info", "translation"]
 
+#BUG: [MAC] regexp doesn't catch addrs with trailing colon
+
 aliases = {
     '[IPV4]' :"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
     '[IPV6_MAP]' : "::ffff:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
