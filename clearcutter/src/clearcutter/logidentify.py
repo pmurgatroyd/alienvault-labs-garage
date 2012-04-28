@@ -37,7 +37,7 @@ class ClusterNode(object):
     ContentHash = ""
     
     
-    def __init__(self,NodeContent="Not Provided"):
+    def __init__(self, NodeContent="Not Provided"):
         self.Children = []
         self.Content = NodeContent
         #if verbose > 3 : print "Created new Node " + str(id(self)) + " with content : " + self.Content      
@@ -52,7 +52,7 @@ class ClusterNode(object):
         return self.Content
 
 
-    def MatchChild(self,MatchContent):
+    def MatchChild(self, MatchContent):
         if len(self.Children) == 0:
             #print "No Children"
             return None
@@ -65,7 +65,7 @@ class ClusterNode(object):
                     return None
 
               
-    def MatchNephew(self,MatchContent):
+    def MatchNephew(self, MatchContent):
         """Find Nephew Match"""
         if self.Parent == None: #This node is the root node
             return None
@@ -77,7 +77,7 @@ class ClusterNode(object):
         return None
                     
 
-    def AddChild(self,NodeContent):
+    def AddChild(self, NodeContent):
         ChildContent = ClusterNode(NodeContent)
         ChildContent.Parent = self
         self.Children.append(ChildContent)
@@ -107,11 +107,11 @@ class ClusterGroup(object):
         rootNode = ClusterNode(NodeContent="ROOTNODE")
         entries = []
              
-        def __init__(self,args):
+        def __init__(self, args):
                 self.rootNode = ClusterNode(NodeContent="ROOTNODE")           
                 self.Args = args
 
-        def IsMatch(self,logline):  
+        def IsMatch(self, logline):  
                 '''
                 Test the incoming log line to see if it matches this clustergroup
                 Return boolean match
@@ -136,10 +136,10 @@ class ClusterGroup(object):
                                 currentNode = match
 
 
-        def IsEndNode(self,Node):
+        def IsEndNode(self, Node):
                 '''Is This Node the end of a log cluster path?'''
                 endnode = False
-                hasNephews= False
+                hasNephews = False
                 if (len(Node.Children) is 0):  #I'm an EndNode for a log wording cluster    
                         if Node.Parent is not None: #let's make sure our siblings are all endnodes too, and this is really var data                
                                 for sibling in Node.Parent.Children:
@@ -147,7 +147,7 @@ class ClusterGroup(object):
                                                 hasNephews = True 
                                 if (hasNephews is False) and (len(Node.Parent.Children) >= ClusterGroup.VarThreshold):  #log event ends in a variable 
                                         endnode = True
-                                if (hasNephews is False) and (len(Node.Parent.Children)  == 1) : #log event ends in a fixed string
+                                if (hasNephews is False) and (len(Node.Parent.Children) == 1) : #log event ends in a fixed string
                                         endnode = True
                 if endnode is True:
                         entry = Node.GeneratePath()
@@ -155,7 +155,7 @@ class ClusterGroup(object):
                                 self.entries.append(entry)
                 
 
-        def BuildResultsTree(self,node):
+        def BuildResultsTree(self, node):
                 '''Recurse through the Node Tree, identifying and printing complete log patterns'''
                 if self.IsEndNode(node) == True : return None # no children so back up a level
                 for childnode in node.Children:
@@ -172,7 +172,7 @@ class ClusterGroup(object):
                 
                 previous = ''          
                 for entry in self.entries:
-                    if levenshtein.levenshtein(entry,previous) < ClusterGroup.VarDistance : 
+                    if levenshtein.levenshtein(entry, previous) < ClusterGroup.VarDistance : 
                         print "\t" + entry
                     else:
                         print entry
@@ -187,7 +187,7 @@ class ClusterGroup(object):
                     raise IOError()
                 #if args.v > 0 : print "Processing Log File "  + log.Filename + ":" + str(log.Length) + " bytes" 
                 logline = self.Log.RetrieveCurrentLine() 
-                widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()),' ', progressbar.ETA()]
+                widgets = ['Processing potential messages: ', progressbar.Percentage(), ' ', progressbar.Bar(marker=progressbar.RotatingMarker()), ' ', progressbar.ETA()]
                 if self.Args.quiet is False : pbar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
                 while logline != "": #TODO: Make this actually exit on EOF
                     self.IsMatch(logline)

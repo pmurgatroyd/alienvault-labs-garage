@@ -12,7 +12,7 @@ __maintainer__ = "CP Constantine"
 #TODO: Add transparent support and normalization for multiple log file formats
 #TODO: Add remote retrieval of logs? perhaps from DB sources
 
-import os,sys
+import os, sys
 
 class LogFile(object):
     '''
@@ -33,15 +33,15 @@ class LogFile(object):
         
         if (memory == True and self.Length < 2147483648):
             if verbose == True: print "Loading file into RAM"
-            filehandle = open(filename,'r')            
+            filehandle = open(filename, 'r')            
             self._filedata = filehandle.readlines()
         else:
             if verbose == True: print "Reading from Disk"
-            self._filedata = open(filename,'r')
+            self._filedata = open(filename, 'r')
             
         try:             
             if verbose == True : print "Using File: " + filename
-            self._filedata = open(filename,'r')
+            self._filedata = open(filename, 'r')
         except ValueError:
             if verbose == True : print "Invalid Filename: " + sys.exc_info()[2]
             raise sys.exc_info()
@@ -50,7 +50,7 @@ class LogFile(object):
             raise sys.exc_info()
         self.Length = os.path.getsize(filename)
     
-    def RetrieveCurrentLine(self, verbose=False ):
+    def RetrieveCurrentLine(self, verbose=False):
         self.Position = self._filedata.tell()        
         return self._filedata.readline() #Fix for in-memory
         

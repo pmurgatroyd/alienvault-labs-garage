@@ -119,7 +119,7 @@ class FileTransferSpeed(ProgressBarWidget):
     "Widget for showing the transfer speed (useful for file transfers)."
     def __init__(self):
         self.fmt = '%6.2f %s'
-        self.units = ['B','K','M','G','T','P']
+        self.units = ['B', 'K', 'M', 'G', 'T', 'P']
     def update(self, pbar):
         if pbar.seconds_elapsed < 2e-6:#== 0:
             bps = 0.0
@@ -130,7 +130,7 @@ class FileTransferSpeed(ProgressBarWidget):
             if spd < 1000:
                 break
             spd /= 1000
-        return self.fmt % (spd, u+'/s')
+        return self.fmt % (spd, u + '/s')
 
 class RotatingMarker(ProgressBarWidget):
     "A rotating marker for filling the bar of progress."
@@ -140,7 +140,7 @@ class RotatingMarker(ProgressBarWidget):
     def update(self, pbar):
         if pbar.finished:
             return self.markers[0]
-        self.curmark = (self.curmark + 1)%len(self.markers)
+        self.curmark = (self.curmark + 1) % len(self.markers)
         return self.markers[self.curmark]
 
 class Percentage(ProgressBarWidget):
@@ -169,7 +169,7 @@ class Bar(ProgressBarWidgetHFill):
         cwidth = width - len(self.left) - len(self.right)
         marked_width = int(percent * cwidth / 100)
         m = self._format_marker(pbar)
-        bar = (self.left + (m*marked_width).ljust(cwidth) + self.right)
+        bar = (self.left + (m * marked_width).ljust(cwidth) + self.right)
         return bar
 
 class ReverseBar(Bar):
@@ -179,7 +179,7 @@ class ReverseBar(Bar):
         cwidth = width - len(self.left) - len(self.right)
         marked_width = int(percent * cwidth / 100)
         m = self._format_marker(pbar)
-        bar = (self.left + (m*marked_width).rjust(cwidth) + self.right)
+        bar = (self.left + (m * marked_width).rjust(cwidth) + self.right)
         return bar
 
 default_widgets = [Percentage(), ' ', Bar()]
@@ -222,7 +222,7 @@ class ProgressBar(object):
         self.signal_set = False
         if term_width is None:
             try:
-                self.handle_resize(None,None)
+                self.handle_resize(None, None)
                 signal.signal(signal.SIGWINCH, self.handle_resize)
                 self.signal_set = True
             except:
@@ -237,12 +237,12 @@ class ProgressBar(object):
         self.seconds_elapsed = 0
 
     def handle_resize(self, signum, frame):
-        h,w=array('h', ioctl(self.fd,termios.TIOCGWINSZ,'\0'*8))[:2]
+        h, w = array('h', ioctl(self.fd, termios.TIOCGWINSZ, '\0' * 8))[:2]
         self.term_width = w
 
     def percentage(self):
         "Returns the percentage of the progress."
-        return self.currval*100.0 / self.maxval
+        return self.currval * 100.0 / self.maxval
 
     def _format_widgets(self):
         r = []
@@ -262,7 +262,7 @@ class ProgressBar(object):
                 currwidth += len(weval)
                 r.append(weval)
         for iw in hfill_inds:
-            r[iw] = r[iw].update(self, (self.term_width-currwidth)/num_hfill)
+            r[iw] = r[iw].update(self, (self.term_width - currwidth) / num_hfill)
         return r
 
     def _format_line(self):
@@ -312,7 +312,7 @@ class ProgressBar(object):
 
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     import os
 
     def example1():
@@ -321,7 +321,7 @@ if __name__=='__main__':
         pbar = ProgressBar(widgets=widgets, maxval=10000000).start()
         for i in range(1000000):
             # do something
-            pbar.update(10*i+1)
+            pbar.update(10 * i + 1)
         pbar.finish()
         print
 
@@ -330,17 +330,17 @@ if __name__=='__main__':
             "It's bigger between 45 and 80 percent"
             def update(self, pbar):
                 if 45 < pbar.percentage() < 80:
-                    return 'Bigger Now ' + FileTransferSpeed.update(self,pbar)
+                    return 'Bigger Now ' + FileTransferSpeed.update(self, pbar)
                 else:
-                    return FileTransferSpeed.update(self,pbar)
+                    return FileTransferSpeed.update(self, pbar)
 
-        widgets = [CrazyFileTransferSpeed(),' <<<', Bar(), '>>> ', Percentage(),' ', ETA()]
+        widgets = [CrazyFileTransferSpeed(), ' <<<', Bar(), '>>> ', Percentage(), ' ', ETA()]
         pbar = ProgressBar(widgets=widgets, maxval=10000000)
         # maybe do something
         pbar.start()
         for i in range(2000000):
             # do something
-            pbar.update(5*i+1)
+            pbar.update(5 * i + 1)
         pbar.finish()
         print
 
@@ -349,17 +349,17 @@ if __name__=='__main__':
         pbar = ProgressBar(widgets=widgets, maxval=10000000).start()
         for i in range(1000000):
             # do something
-            pbar.update(10*i+1)
+            pbar.update(10 * i + 1)
         pbar.finish()
         print
 
     def example4():
         widgets = ['Test: ', Percentage(), ' ',
-                   Bar(marker='0',left='[',right=']'),
+                   Bar(marker='0', left='[', right=']'),
                    ' ', ETA(), ' ', FileTransferSpeed()]
         pbar = ProgressBar(widgets=widgets, maxval=500)
         pbar.start()
-        for i in range(100,500+1,50):
+        for i in range(100, 500 + 1, 50):
             time.sleep(0.2)
             pbar.update(i)
         pbar.finish()

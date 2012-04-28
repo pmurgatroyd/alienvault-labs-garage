@@ -10,7 +10,7 @@ __status__ = "Prototype"
 __maintainer__ = "CP Constantine"
 
 
-import gtk,gtk.glade,pygtk
+import gtk, gtk.glade, pygtk
 
 class ClearCutterUI:
     """ClearCutter GTK frontend"""

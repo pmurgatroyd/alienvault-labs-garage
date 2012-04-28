@@ -89,6 +89,6 @@ def FindCommonRegex(teststring):
         replacements.sort()
         for regmap in replacements:
                 p = re.compile(aliases[regmap])
-                returnstring = p.sub(regmap,returnstring)
+                returnstring = p.sub(regmap, returnstring)
         return returnstring
     

@@ -8,7 +8,7 @@ For testing plugins before loading into OSSIM, and simulating the log parsing pr
 __author__ = "CP Constantine"
 __email__ = "conrad@alienvault.com"
 __copyright__ = 'Copyright:Alienvault 2012'
-__credits__ = ["Conrad Constantine","Dominique Karg"]
+__credits__ = ["Conrad Constantine", "Dominique Karg"]
 __version__ = "0.2"
 __license__ = "BSD"
 __status__ = "Prototype"
@@ -20,7 +20,7 @@ __maintainer__ = "CP Constantine"
 
 #TODO: Implement precheck
 
-import sys,re,ConfigParser, pluginvalidate, commonvars
+import sys, re, ConfigParser, pluginvalidate, commonvars
 
 class ParsePlugin(object):
     """Processes Log Data against a list of regular expressions, possibly read from an OSSIM collector plugin"""
@@ -56,21 +56,21 @@ class ParsePlugin(object):
                'SYSLOG_WY_DATE' : "\w+\s+\d{1,2}\s\d{4}\s\d\d:\d\d:\d\d",
               }
 
-    def __init__(self,args):
+    def __init__(self, args):
         self.Args = args
         self.LoadPlugin()
         
-    def hitems(self,config, section):
+    def hitems(self, config, section):
         itemhash = {}
         for item in config.items(section):
             itemhash[item[0]] = self._strip_value(item[1])
         return itemhash
     
-    def _strip_value(self,value):
+    def _strip_value(self, value):
         from string import strip
         return strip(strip(value, '"'), "'")
     
-    def get_entry(self,config, section, option):
+    def get_entry(self, config, section, option):
         value = config.get(section, option)
         value = self._strip_value(value)
         return value
@@ -116,8 +116,8 @@ class ParsePlugin(object):
                 for alias in self.aliases:
                     tmp_al = ""
                     tmp_al = "\\" + alias;
-                    regexp = regexp.replace(tmp_al,ParsePlugin.aliases[alias])
-                result = re.findall(regexp,line)
+                    regexp = regexp.replace(tmp_al, ParsePlugin.aliases[alias])
+                result = re.findall(regexp, line)
                 try:
                     tmp = result[0]
                 except IndexError:
@@ -164,7 +164,7 @@ class ParsePlugin(object):
         for key in self.SIDs:
             print "Rule: \t%s\n\t\t\t\t\t\tMatched %d times by Regexp" % (str(key), self.rule_stats.count(str(key)))
             if self.Args.precheck is True:
-                print "\t\t\t\t\t\tMatched %d times by Precheck" % ( self.rule_precheck_stats.count(str(key)))
+                print "\t\t\t\t\t\tMatched %d times by Precheck" % (self.rule_precheck_stats.count(str(key)))
    
         print "Counted", len(self.Log), "lines."
         print "Matched", self.matched, "lines."
