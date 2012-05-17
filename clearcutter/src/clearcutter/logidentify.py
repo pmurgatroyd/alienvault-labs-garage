@@ -137,7 +137,11 @@ class ClusterGroup(object):
 
 
         def IsEndNode(self, Node):
-                '''Is This Node the end of a log cluster path?'''
+                '''
+                Is This Node the final word of a log template?
+                
+                @return: True or False
+                '''
                 endnode = False
                 hasNephews = False
                 if (len(Node.Children) is 0):  #I'm an EndNode for a log wording cluster    
@@ -156,14 +160,22 @@ class ClusterGroup(object):
                 
 
         def BuildResultsTree(self, node):
-                '''Recurse through the Node Tree, identifying and printing complete log patterns'''
+                '''
+                Recurse through the Node Tree, identifying and printing complete log patterns'
+                
+                @return: None (recursive function)
+                '''
                 if self.IsEndNode(node) == True : return None # no children so back up a level
                 for childnode in node.Children:
                         self.BuildResultsTree(childnode)
 
 
         def Results(self):
-                '''Display all identified unique log event types'''
+                '''
+                Display all identified unique log event types
+                
+                @return None
+                '''
                 #if options.outfile == true: dump to file 
                 print "\n========== Potential Unique Log Events ==========\n"
                 self.BuildResultsTree(self.rootNode)
@@ -197,8 +209,14 @@ class ClusterGroup(object):
                 if self.Args.quiet is False : pbar.finish()
         
         def GenPlugin(self):
+            '''
+            Create a Template OSSIM agent plugin file using the identified log templates as SIDs
+            
+            @return: The filename of the generated plugin
+            '''
             generator = plugingenerate.Generator(self.entries)
             generator.WritePlugin()
+            return generator.PluginFile
             
 #Take EndNode Strings
 #Calculate Levenshtein distance between them

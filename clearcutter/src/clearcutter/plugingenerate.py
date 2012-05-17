@@ -22,6 +22,7 @@ class Generator(object):
 
     Plugin = ConfigParser()
 
+    PluginFile = "testplugin.cfg"
 
     def __init__(self, entries):
         '''
@@ -42,7 +43,7 @@ class Generator(object):
 
         
     def WritePlugin(self):
-        outfile = open("testplugin.cfg", "w")
+        outfile = open(self.PluginFile, "w")
         self.Plugin.write(outfile) 
 
     def WriteSQL(self):

@@ -13,7 +13,8 @@ setup(name='clearcutter',
       url = 'http://code.google.com/p/alienvault-labs-garage/',
       packages = ['clearcutter'],
       scripts=['clear-cutter'],
-      cmdclass = { "build" : build_extra.build_extra}
+      cmdclass = { "build" : build_extra.build_extra},
+      requires = ['argparse'],
       )
 
 #TODO: easy_install argparse

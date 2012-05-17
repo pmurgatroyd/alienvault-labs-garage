@@ -6,7 +6,7 @@ class CodeScrape(object):
     '''
 
 
-    def __init__(selfparams):
+    def __init__(self,params):
         '''
         Constructor
         '''
