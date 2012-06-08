@@ -36,10 +36,10 @@ class Generator(object):
             
             self.Plugin.add_section(SID)
             self.Plugin.set(SID, "regexp", SID)
-            options = commonvars.DefaultDirectives.remove('regexp')
+            options = commonvars.DefaultDirectives
+            options.remove('regexp') #this is added later
             for directive in options:
                 self.Plugin.set(SID, directive, "")
-            
 
         
     def WritePlugin(self):
