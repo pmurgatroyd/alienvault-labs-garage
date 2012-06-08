@@ -9,6 +9,7 @@ regardless of the variable content. E.G. the log message "User admin logged into
 where the text 'admin' and 'gateway' are variable content, but the unique log message is "user <user> logged into host <host>"
 Identifying the specific log messages present in a log file is a key first step to further log processsing.
 
+
 logfile log file to process')
 -t, --threshold', action='store', type=int, help='Threshold value for Variable Assignment', )
 -v, --verbose', action='count', help='verbose mode - use multiple times to increase verbosity')
